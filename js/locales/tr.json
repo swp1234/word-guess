@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "description": "Günlük kelime tahmin oyunu. 6 denemede 5 harfli kelimeyi tahmin et ve kelime dağarcığını geliştir."
+  },
+  "app": {
+    "title": "Word Guess"
+  },
+  "game": {
+    "daily": "Günlük",
+    "practice": "Alıştırma",
+    "word": "Kelime"
+  },
+  "buttons": {
+    "hint": "İpucu",
+    "stats": "İstatistikler",
+    "about": "Hakkında",
+    "share": "Paylaş",
+    "playAgain": "Tekrar Oyna"
+  },
+  "keyboard": {
+    "backspace": "Geri",
+    "enter": "Giriş"
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "hardMode": "Zor Mod",
+    "hardModeDesc": "İpuçları kullanılmalıdır (Daha Zorlayıcı)",
+    "sound": "Ses Efektleri",
+    "animations": "Animasyonlar"
+  },
+  "stats": {
+    "title": "İstatistikler",
+    "played": "Oynanılan",
+    "wins": "Kazanışlar",
+    "streak": "Seri",
+    "winRate": "Kazanma Oranı",
+    "distribution": "Deneme Dağılımı",
+    "attempts": "Denemeler"
+  },
+  "result": {
+    "won": "Kazandın!",
+    "lost": "Oyun Bitti",
+    "correct": "doğru!",
+    "answer": "Cevap",
+    "nextDaily": "Sonraki günlük bulmaca",
+    "copiedToClipboard": "Panoya kopyalandı"
+  },
+  "errors": {
+    "wordTooShort": "Kelime 5 harf olmalıdır",
+    "wordNotInList": "Kelime listede yok",
+    "hardModeViolation": "Daha önce ortaya çıkan harfleri kullanmalısın"
+  },
+  "hints": {
+    "vowel": "Bu kelimede ünlü vardır",
+    "noVowel": "Bu kelimede ünlü yoktur",
+    "letterAt": "Konum"
+  },
+  "about": {
+    "title": "Word Guess Hakkında",
+    "description": "Word Guess, Wordle'den esinlenen günlük bir kelime tahmin oyunudur. 6 denemede 5 harfli kelimeyi tahmin et.",
+    "howToPlay": "Nasıl Oynanır",
+    "rule1": "Kelimeyi 6 denemede tahmin et",
+    "rule2": "Her tahmin geçerli bir 5 harfli kelime olmalıdır",
+    "rule3": "Her tahminden sonra kutucuklar renk değiştirir",
+    "rule4": "Yeşil: doğru konum",
+    "rule5": "Sarı: doğru harf, yanlış konum",
+    "rule6": "Gri: harf kelimede yok"
+  }
+}

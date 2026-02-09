@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "description": "Daily word puzzle game in 6 attempts. Guess the 5-letter word and improve your vocabulary."
+  },
+  "app": {
+    "title": "Word Guess"
+  },
+  "game": {
+    "daily": "Daily",
+    "practice": "Practice",
+    "word": "Word"
+  },
+  "buttons": {
+    "hint": "Hint",
+    "stats": "Statistics",
+    "about": "About",
+    "share": "Share",
+    "playAgain": "Play Again"
+  },
+  "keyboard": {
+    "backspace": "Back",
+    "enter": "Enter"
+  },
+  "settings": {
+    "title": "Settings",
+    "hardMode": "Hard Mode",
+    "hardModeDesc": "Hints must be used (More Challenging)",
+    "sound": "Sound Effects",
+    "animations": "Animations"
+  },
+  "stats": {
+    "title": "Statistics",
+    "played": "Played",
+    "wins": "Wins",
+    "streak": "Streak",
+    "winRate": "Win Rate",
+    "distribution": "Guess Distribution",
+    "attempts": "Attempts"
+  },
+  "result": {
+    "won": "You Won!",
+    "lost": "Game Over",
+    "correct": "is correct!",
+    "answer": "The answer was",
+    "nextDaily": "Next daily puzzle",
+    "copiedToClipboard": "Copied to clipboard!"
+  },
+  "errors": {
+    "wordTooShort": "Word must be 5 letters",
+    "wordNotInList": "Word not in list",
+    "hardModeViolation": "Must use previously revealed letters"
+  },
+  "hints": {
+    "vowel": "This word has vowels",
+    "noVowel": "This word has no vowels",
+    "letterAt": "Position"
+  },
+  "about": {
+    "title": "About Word Guess",
+    "description": "Word Guess is a daily word puzzle game inspired by Wordle. Guess the 5-letter word in 6 attempts and improve your vocabulary.",
+    "howToPlay": "How to Play",
+    "rule1": "Guess the word in 6 attempts",
+    "rule2": "Each guess must be a valid 5-letter word",
+    "rule3": "Tiles change color after each guess",
+    "rule4": "Green: correct position",
+    "rule5": "Yellow: correct letter, wrong position",
+    "rule6": "Gray: letter not in word"
+  }
+}

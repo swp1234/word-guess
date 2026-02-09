@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "description": "Jeu quotidien de devinette de mots. Devinez le mot de 5 lettres en 6 tentatives et améliorez votre vocabulaire."
+  },
+  "app": {
+    "title": "Word Guess"
+  },
+  "game": {
+    "daily": "Quotidien",
+    "practice": "Pratique",
+    "word": "Mot"
+  },
+  "buttons": {
+    "hint": "Indice",
+    "stats": "Statistiques",
+    "about": "À Propos",
+    "share": "Partager",
+    "playAgain": "Rejouer"
+  },
+  "keyboard": {
+    "backspace": "Retour",
+    "enter": "Entrer"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "hardMode": "Mode Difficile",
+    "hardModeDesc": "Les indices doivent être utilisés (Plus Difficile)",
+    "sound": "Effets Sonores",
+    "animations": "Animations"
+  },
+  "stats": {
+    "title": "Statistiques",
+    "played": "Joué",
+    "wins": "Victoires",
+    "streak": "Série",
+    "winRate": "Taux de Victoire",
+    "distribution": "Distribution des Tentatives",
+    "attempts": "Tentatives"
+  },
+  "result": {
+    "won": "Vous Avez Gagné!",
+    "lost": "Fin de Partie",
+    "correct": "est correct!",
+    "answer": "La réponse était",
+    "nextDaily": "Prochaine énigme quotidienne",
+    "copiedToClipboard": "Copié dans le presse-papiers"
+  },
+  "errors": {
+    "wordTooShort": "Le mot doit avoir 5 lettres",
+    "wordNotInList": "Mot absent de la liste",
+    "hardModeViolation": "Vous devez utiliser les lettres précédemment révélées"
+  },
+  "hints": {
+    "vowel": "Ce mot contient des voyelles",
+    "noVowel": "Ce mot ne contient pas de voyelles",
+    "letterAt": "Position"
+  },
+  "about": {
+    "title": "À Propos de Word Guess",
+    "description": "Word Guess est un jeu quotidien de devinette de mots inspiré par Wordle. Devinez le mot de 5 lettres en 6 tentatives.",
+    "howToPlay": "Comment Jouer",
+    "rule1": "Devinez le mot en 6 tentatives",
+    "rule2": "Chaque tentative doit être un mot valide de 5 lettres",
+    "rule3": "Les carreaux changent de couleur après chaque tentative",
+    "rule4": "Vert: position correcte",
+    "rule5": "Jaune: lettre correcte, mauvaise position",
+    "rule6": "Gris: lettre absente du mot"
+  }
+}

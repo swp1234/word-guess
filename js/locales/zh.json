@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "description": "每天猜测一个5字母的英文单词，6次尝试机会。提高你的词汇量。"
+  },
+  "app": {
+    "title": "Word Guess"
+  },
+  "game": {
+    "daily": "每日",
+    "practice": "练习",
+    "word": "单词"
+  },
+  "buttons": {
+    "hint": "提示",
+    "stats": "统计",
+    "about": "关于",
+    "share": "分享",
+    "playAgain": "再玩一次"
+  },
+  "keyboard": {
+    "backspace": "删除",
+    "enter": "确认"
+  },
+  "settings": {
+    "title": "设置",
+    "hardMode": "困难模式",
+    "hardModeDesc": "必须使用提示（更具挑战性）",
+    "sound": "音效",
+    "animations": "动画"
+  },
+  "stats": {
+    "title": "统计",
+    "played": "已玩",
+    "wins": "胜利",
+    "streak": "连胜",
+    "winRate": "胜率",
+    "distribution": "尝试分布",
+    "attempts": "尝试"
+  },
+  "result": {
+    "won": "你赢了！",
+    "lost": "游戏结束",
+    "correct": "正确！",
+    "answer": "答案是",
+    "nextDaily": "下一个每日拼图",
+    "copiedToClipboard": "已复制到剪贴板"
+  },
+  "errors": {
+    "wordTooShort": "请输入5个字母",
+    "wordNotInList": "单词不在列表中",
+    "hardModeViolation": "必须使用之前显示的字母"
+  },
+  "hints": {
+    "vowel": "这个单词有元音",
+    "noVowel": "这个单词没有元音",
+    "letterAt": "位置"
+  },
+  "about": {
+    "title": "关于Word Guess",
+    "description": "Word Guess是受Wordle启发的每日单词猜测游戏。在6次尝试中猜测5个字母的单词。",
+    "howToPlay": "如何玩",
+    "rule1": "在6次尝试中猜测该单词",
+    "rule2": "每次猜测必须是有效的5个字母的单词",
+    "rule3": "每次猜测后，瓷砖颜色会改变",
+    "rule4": "绿色：正确位置",
+    "rule5": "黄色：单词中的字母，位置错误",
+    "rule6": "灰色：单词中没有的字母"
+  }
+}

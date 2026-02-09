@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <style>
+      @media (prefers-color-scheme: dark) {
+        .bg { fill: #0f0f23; }
+        .accent { fill: #27ae60; }
+        .text { fill: #f0f0f0; }
+      }
+      @media (prefers-color-scheme: light) {
+        .bg { fill: #ffffff; }
+        .accent { fill: #27ae60; }
+        .text { fill: #0f0f23; }
+      }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" class="bg"/>
+
+  <!-- Rounded corners -->
+  <rect width="512" height="512" rx="120" class="bg"/>
+
+  <!-- Main card background -->
+  <rect x="64" y="64" width="384" height="384" rx="48" class="accent" opacity="0.1"/>
+
+  <!-- Game board grid -->
+  <g transform="translate(128, 128)">
+    <!-- Row 1 -->
+    <rect x="0" y="0" width="52" height="52" rx="12" class="accent" opacity="0.8"/>
+    <rect x="64" y="0" width="52" height="52" rx="12" class="accent" opacity="0.6"/>
+    <rect x="128" y="0" width="52" height="52" rx="12" class="accent" opacity="0.4"/>
+
+    <!-- Row 2 -->
+    <rect x="0" y="64" width="52" height="52" rx="12" class="accent" opacity="0.4"/>
+    <rect x="64" y="64" width="52" height="52" rx="12" class="accent" opacity="0.8"/>
+    <rect x="128" y="64" width="52" height="52" rx="12" class="accent" opacity="0.6"/>
+
+    <!-- Row 3 -->
+    <rect x="0" y="128" width="52" height="52" rx="12" class="accent" opacity="0.6"/>
+    <rect x="64" y="128" width="52" height="52" rx="12" class="accent" opacity="0.4"/>
+    <rect x="128" y="128" width="52" height="52" rx="12" class="accent" opacity="0.8"/>
+  </g>
+
+  <!-- Title text -->
+  <text x="256" y="420" font-family="system-ui, sans-serif" font-size="56" font-weight="700" text-anchor="middle" class="text">GUESS</text>
+</svg>

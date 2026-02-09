@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "description": "Permainan teka-teki kata harian. Tebak kata 5 huruf dalam 6 percobaan dan tingkatkan kosa kata Anda."
+  },
+  "app": {
+    "title": "Word Guess"
+  },
+  "game": {
+    "daily": "Harian",
+    "practice": "Latihan",
+    "word": "Kata"
+  },
+  "buttons": {
+    "hint": "Petunjuk",
+    "stats": "Statistik",
+    "about": "Tentang",
+    "share": "Bagikan",
+    "playAgain": "Mainkan Lagi"
+  },
+  "keyboard": {
+    "backspace": "Kembali",
+    "enter": "Masukkan"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "hardMode": "Mode Sulit",
+    "hardModeDesc": "Petunjuk harus digunakan (Lebih Menantang)",
+    "sound": "Efek Suara",
+    "animations": "Animasi"
+  },
+  "stats": {
+    "title": "Statistik",
+    "played": "Dimainkan",
+    "wins": "Kemenangan",
+    "streak": "Seri",
+    "winRate": "Tingkat Kemenangan",
+    "distribution": "Distribusi Percobaan",
+    "attempts": "Percobaan"
+  },
+  "result": {
+    "won": "Anda Menang!",
+    "lost": "Permainan Berakhir",
+    "correct": "adalah benar!",
+    "answer": "Jawabannya adalah",
+    "nextDaily": "Teka-teki harian berikutnya",
+    "copiedToClipboard": "Disalin ke papan klip"
+  },
+  "errors": {
+    "wordTooShort": "Kata harus 5 huruf",
+    "wordNotInList": "Kata tidak ada dalam daftar",
+    "hardModeViolation": "Anda harus menggunakan huruf yang sebelumnya terungkap"
+  },
+  "hints": {
+    "vowel": "Kata ini memiliki huruf vokal",
+    "noVowel": "Kata ini tidak memiliki huruf vokal",
+    "letterAt": "Posisi"
+  },
+  "about": {
+    "title": "Tentang Word Guess",
+    "description": "Word Guess adalah permainan teka-teki kata harian yang terinspirasi oleh Wordle. Tebak kata 5 huruf dalam 6 percobaan.",
+    "howToPlay": "Cara Bermain",
+    "rule1": "Tebak kata dalam 6 percobaan",
+    "rule2": "Setiap tebakan harus berupa kata 5 huruf yang valid",
+    "rule3": "Ubin berubah warna setelah setiap tebakan",
+    "rule4": "Hijau: posisi benar",
+    "rule5": "Kuning: huruf benar, posisi salah",
+    "rule6": "Abu-abu: huruf tidak ada dalam kata"
+  }
+}

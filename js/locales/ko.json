@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "description": "매일 새로운 단어를 맞추는 5글자 영어 단어 맞추기 게임입니다. 6번의 기회로 단어를 맞춰보세요."
+  },
+  "app": {
+    "title": "Word Guess"
+  },
+  "game": {
+    "daily": "일일",
+    "practice": "연습",
+    "word": "단어"
+  },
+  "buttons": {
+    "hint": "힌트",
+    "stats": "통계",
+    "about": "정보",
+    "share": "공유",
+    "playAgain": "다시 하기"
+  },
+  "keyboard": {
+    "backspace": "삭제",
+    "enter": "입력"
+  },
+  "settings": {
+    "title": "설정",
+    "hardMode": "어려움 모드",
+    "hardModeDesc": "힌트 사용 필수 (더 어려움)",
+    "sound": "효과음",
+    "animations": "애니메이션"
+  },
+  "stats": {
+    "title": "통계",
+    "played": "플레이",
+    "wins": "승리",
+    "streak": "연속",
+    "winRate": "승률",
+    "distribution": "시도 분포",
+    "attempts": "시도"
+  },
+  "result": {
+    "won": "승리!",
+    "lost": "패배",
+    "correct": "정답입니다!",
+    "answer": "정답",
+    "nextDaily": "다음 일일 퍼즐",
+    "copiedToClipboard": "클립보드에 복사되었습니다"
+  },
+  "errors": {
+    "wordTooShort": "5글자를 입력하세요",
+    "wordNotInList": "단어 목록에 없습니다",
+    "hardModeViolation": "이전 정답을 사용해야 합니다"
+  },
+  "hints": {
+    "vowel": "이 단어에 모음이 있습니다",
+    "noVowel": "이 단어에 모음이 없습니다",
+    "letterAt": "위치"
+  },
+  "about": {
+    "title": "Word Guess 정보",
+    "description": "Word Guess는 Wordle에서 영감을 받은 일일 단어 맞추기 게임입니다. 6번의 시도로 5글자 단어를 맞춰 어휘력을 향상하세요.",
+    "howToPlay": "플레이 방법",
+    "rule1": "6번의 시도로 단어를 맞춰야 합니다",
+    "rule2": "각 추측은 유효한 5글자 단어여야 합니다",
+    "rule3": "각 추측 후 타일의 색이 변합니다",
+    "rule4": "초록색: 정확한 위치",
+    "rule5": "노란색: 단어에 포함되지만 위치가 틀림",
+    "rule6": "회색: 단어에 없음"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "description": "毎日新しい5文字の英単語を当てるゲームです。6回の試行で単語を当ててください。"
+  },
+  "app": {
+    "title": "Word Guess"
+  },
+  "game": {
+    "daily": "日替わり",
+    "practice": "練習",
+    "word": "単語"
+  },
+  "buttons": {
+    "hint": "ヒント",
+    "stats": "統計",
+    "about": "について",
+    "share": "シェア",
+    "playAgain": "もう一度プレイ"
+  },
+  "keyboard": {
+    "backspace": "戻る",
+    "enter": "入力"
+  },
+  "settings": {
+    "title": "設定",
+    "hardMode": "ハードモード",
+    "hardModeDesc": "ヒントの使用が必須（より困難）",
+    "sound": "効果音",
+    "animations": "アニメーション"
+  },
+  "stats": {
+    "title": "統計",
+    "played": "プレイ数",
+    "wins": "勝利",
+    "streak": "連勝",
+    "winRate": "勝率",
+    "distribution": "試行分布",
+    "attempts": "試行"
+  },
+  "result": {
+    "won": "勝利！",
+    "lost": "ゲームオーバー",
+    "correct": "正解です！",
+    "answer": "正解は",
+    "nextDaily": "次の日替わりパズル",
+    "copiedToClipboard": "クリップボードにコピーしました"
+  },
+  "errors": {
+    "wordTooShort": "5文字を入力してください",
+    "wordNotInList": "リストにない単語です",
+    "hardModeViolation": "以前に表示された文字を使用する必要があります"
+  },
+  "hints": {
+    "vowel": "この単語には母音があります",
+    "noVowel": "この単語に母音はありません",
+    "letterAt": "位置"
+  },
+  "about": {
+    "title": "Word Guessについて",
+    "description": "Word GuessはWordleに影響を受けた日替わり単語ゲームです。6回の試行で5文字の単語を当ててください。",
+    "howToPlay": "遊び方",
+    "rule1": "6回の試行で単語を当てます",
+    "rule2": "各推測は有効な5文字の単語である必要があります",
+    "rule3": "各推測後、タイルの色が変わります",
+    "rule4": "緑色：正確な位置",
+    "rule5": "黄色：単語に含まれているが位置が異なる",
+    "rule6": "灰色：単語に含まれていない"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "description": "Tägliches Wortratespiel. Erraten Sie das 5-buchstabige Wort in 6 Versuchen und verbessern Sie Ihren Wortschatz."
+  },
+  "app": {
+    "title": "Word Guess"
+  },
+  "game": {
+    "daily": "Täglich",
+    "practice": "Üben",
+    "word": "Wort"
+  },
+  "buttons": {
+    "hint": "Hinweis",
+    "stats": "Statistiken",
+    "about": "Über",
+    "share": "Teilen",
+    "playAgain": "Nochmal Spielen"
+  },
+  "keyboard": {
+    "backspace": "Zurück",
+    "enter": "Eingeben"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "hardMode": "Schwieriger Modus",
+    "hardModeDesc": "Hinweise müssen verwendet werden (Anspruchsvoller)",
+    "sound": "Soundeffekte",
+    "animations": "Animationen"
+  },
+  "stats": {
+    "title": "Statistiken",
+    "played": "Gespielt",
+    "wins": "Siege",
+    "streak": "Serie",
+    "winRate": "Gewinnquote",
+    "distribution": "Versuchsverteilung",
+    "attempts": "Versuche"
+  },
+  "result": {
+    "won": "Du hast gewonnen!",
+    "lost": "Spielende",
+    "correct": "ist korrekt!",
+    "answer": "Die Antwort war",
+    "nextDaily": "Nächstes tägliches Rätsel",
+    "copiedToClipboard": "In Zwischenablage kopiert"
+  },
+  "errors": {
+    "wordTooShort": "Wort muss 5 Buchstaben sein",
+    "wordNotInList": "Wort nicht in Liste",
+    "hardModeViolation": "Sie müssen zuvor offenbarte Buchstaben verwenden"
+  },
+  "hints": {
+    "vowel": "Dieses Wort hat Vokale",
+    "noVowel": "Dieses Wort hat keine Vokale",
+    "letterAt": "Position"
+  },
+  "about": {
+    "title": "Über Word Guess",
+    "description": "Word Guess ist ein tägliches Wortratespiel, inspiriert von Wordle. Erraten Sie das 5-buchstabige Wort in 6 Versuchen.",
+    "howToPlay": "Anleitung",
+    "rule1": "Erraten Sie das Wort in 6 Versuchen",
+    "rule2": "Jeder Versuch muss ein gültiges 5-buchstabiges Wort sein",
+    "rule3": "Nach jedem Versuch ändern die Kacheln die Farbe",
+    "rule4": "Grün: richtige Position",
+    "rule5": "Gelb: richtiger Buchstabe, falsche Position",
+    "rule6": "Grau: Buchstabe nicht im Wort"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "meta": {
+    "description": "Jogo diário de adivinhação de palavras. Adivinhe a palavra de 5 letras em 6 tentativas e melhore seu vocabulário."
+  },
+  "app": {
+    "title": "Word Guess"
+  },
+  "game": {
+    "daily": "Diário",
+    "practice": "Prática",
+    "word": "Palavra"
+  },
+  "buttons": {
+    "hint": "Dica",
+    "stats": "Estatísticas",
+    "about": "Sobre",
+    "share": "Compartilhar",
+    "playAgain": "Jogar Novamente"
+  },
+  "keyboard": {
+    "backspace": "Voltar",
+    "enter": "Confirmar"
+  },
+  "settings": {
+    "title": "Configurações",
+    "hardMode": "Modo Difícil",
+    "hardModeDesc": "Dicas devem ser usadas (Mais Desafiador)",
+    "sound": "Efeitos Sonoros",
+    "animations": "Animações"
+  },
+  "stats": {
+    "title": "Estatísticas",
+    "played": "Jogou",
+    "wins": "Vitórias",
+    "streak": "Sequência",
+    "winRate": "Taxa de Vitória",
+    "distribution": "Distribuição de Tentativas",
+    "attempts": "Tentativas"
+  },
+  "result": {
+    "won": "Você Ganhou!",
+    "lost": "Fim do Jogo",
+    "correct": "está correto!",
+    "answer": "A resposta foi",
+    "nextDaily": "Próximo quebra-cabeça diário",
+    "copiedToClipboard": "Copiado para a área de transferência"
+  },
+  "errors": {
+    "wordTooShort": "A palavra deve ter 5 letras",
+    "wordNotInList": "Palavra não está na lista",
+    "hardModeViolation": "Você deve usar letras reveladas anteriormente"
+  },
+  "hints": {
+    "vowel": "Esta palavra tem vogais",
+    "noVowel": "Esta palavra não tem vogais",
+    "letterAt": "Posição"
+  },
+  "about": {
+    "title": "Sobre Word Guess",
+    "description": "Word Guess é um jogo diário de adivinhação de palavras inspirado em Wordle. Adivinhe a palavra de 5 letras em 6 tentativas.",
+    "howToPlay": "Como Jogar",
+    "rule1": "Adivinhe a palavra em 6 tentativas",
+    "rule2": "Cada adivinhação deve ser uma palavra válida de 5 letras",
+    "rule3": "As telhas mudam de cor após cada adivinhação",
+    "rule4": "Verde: posição correta",
+    "rule5": "Amarelo: letra correta, posição incorreta",
+    "rule6": "Cinza: letra não está na palavra"
+  }
+}
