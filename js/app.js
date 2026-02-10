@@ -7,7 +7,8 @@
 let gameState = {
     mode: 'daily', // 'daily' or 'practice'
     currentWord: '',
-    guesses: [],
+    guesses: [],       // Completed/submitted guesses only
+    currentGuess: [],  // Letters being typed for current row
     gameOver: false,
     won: false,
     attempts: 6,
@@ -171,14 +172,8 @@ function handleKeyPress(letter) {
     initAudioContext();
     playSound('pop');
 
-    const currentGuessIndex = gameState.guesses.length;
-    const currentGuess = gameState.guesses[currentGuessIndex] || [];
-
-    if (currentGuess.length < 5) {
-        currentGuess.push(letter.toUpperCase());
-        if (!gameState.guesses[currentGuessIndex]) {
-            gameState.guesses[currentGuessIndex] = currentGuess;
-        }
+    if (gameState.currentGuess.length < 5) {
+        gameState.currentGuess.push(letter.toUpperCase());
         updateTiles();
     }
 }
@@ -189,11 +184,8 @@ function handleKeyPress(letter) {
 function handleBackspace() {
     if (gameState.gameOver) return;
 
-    const currentGuessIndex = gameState.guesses.length;
-    const currentGuess = gameState.guesses[currentGuessIndex];
-
-    if (currentGuess && currentGuess.length > 0) {
-        currentGuess.pop();
+    if (gameState.currentGuess.length > 0) {
+        gameState.currentGuess.pop();
         updateTiles();
     }
 }
@@ -204,8 +196,7 @@ function handleBackspace() {
 function handleEnter() {
     if (gameState.gameOver) return;
 
-    const currentGuessIndex = gameState.guesses.length;
-    const currentGuess = gameState.guesses[currentGuessIndex];
+    const currentGuess = gameState.currentGuess;
 
     // Validation
     if (!currentGuess || currentGuess.length !== 5) {
@@ -225,8 +216,12 @@ function handleEnter() {
         return;
     }
 
+    // Move current guess to completed guesses and reset
+    gameState.guesses.push([...currentGuess]);
+    gameState.currentGuess = [];
+
     // Submit guess
-    submitGuess(currentGuess);
+    submitGuess(gameState.guesses[gameState.guesses.length - 1]);
 }
 
 /**
@@ -361,29 +356,26 @@ function updateTiles() {
         tile.classList.remove('filled', 'active', 'correct', 'present', 'absent', 'flip');
     });
 
+    // Render completed guesses (with color feedback)
     gameState.guesses.forEach((guess, guessIndex) => {
+        const feedback = evaluateGuess(guess);
         guess.forEach((letter, letterIndex) => {
             const tileIndex = guessIndex * 5 + letterIndex;
             const tile = document.getElementById(`tile-${tileIndex}`);
             tile.textContent = letter;
             tile.classList.add('filled');
-
-            if (gameState.gameOver && guessIndex < gameState.guesses.length - 1) {
-                // Apply previous guess colors
-                const feedback = evaluateGuess(gameState.guesses[guessIndex]);
-                tile.classList.add(feedback[letterIndex]);
-            }
+            tile.classList.add(feedback[letterIndex]);
         });
     });
 
-    // Highlight current row
-    const currentGuessIndex = gameState.guesses.length;
-    if (currentGuessIndex < gameState.attempts) {
-        const currentGuess = gameState.guesses[currentGuessIndex] || [];
-        currentGuess.forEach((letter, letterIndex) => {
-            const tileIndex = currentGuessIndex * 5 + letterIndex;
+    // Render current (in-progress) guess
+    const currentRowIndex = gameState.guesses.length;
+    if (currentRowIndex < gameState.attempts) {
+        gameState.currentGuess.forEach((letter, letterIndex) => {
+            const tileIndex = currentRowIndex * 5 + letterIndex;
             const tile = document.getElementById(`tile-${tileIndex}`);
-            tile.classList.add('active');
+            tile.textContent = letter;
+            tile.classList.add('filled', 'active');
         });
     }
 }
@@ -542,6 +534,7 @@ function updateDailyTimer() {
 function startNewGame(mode = 'daily') {
     gameState.mode = mode;
     gameState.guesses = [];
+    gameState.currentGuess = [];
     gameState.gameOver = false;
     gameState.won = false;
     gameState.hints = 1;
@@ -652,10 +645,7 @@ function getDayNumber() {
 function useHint() {
     if (gameState.gameOver || gameState.hints <= 0) return;
 
-    const currentGuessIndex = gameState.guesses.length;
-    const feedback = [];
-
-    if (currentGuessIndex === 0) {
+    if (gameState.guesses.length === 0 && gameState.currentGuess.length === 0) {
         // First hint: reveal if word has common patterns
         const vowels = ['A', 'E', 'I', 'O', 'U'];
         const hasVowel = vowels.some(v => gameState.currentWord.includes(v));
@@ -663,10 +653,9 @@ function useHint() {
             `💡 ${i18n.t('hint.vowel')}` :
             `💡 ${i18n.t('hint.noVowel')}`;
     } else {
-        // Reveal one letter
-        const currentGuess = gameState.guesses[currentGuessIndex] || [];
-        if (currentGuess.length < 5) {
-            const nextPos = currentGuess.length;
+        // Reveal one letter at current position
+        if (gameState.currentGuess.length < 5) {
+            const nextPos = gameState.currentGuess.length;
             const hintLetter = gameState.currentWord[nextPos];
             hintText.innerHTML = `💡 ${i18n.t('hint.letterAt')} ${nextPos + 1}: <strong>${hintLetter}</strong>`;
             handleKeyPress(hintLetter);
