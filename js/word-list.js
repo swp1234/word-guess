@@ -1,413 +1,186 @@
 /**
  * Word List for Word Guess Game
- * 2000+ 5-letter English words (copyright-free, common vocabulary)
+ * Answer words: curated common 5-letter English words
+ * Guess validation: Free Dictionary API + local cache
  */
 
-const WORD_LIST = [
-    // Common 5-letter words (A-Z)
-    'about', 'above', 'abuse', 'access', 'across', 'actor', 'acute', 'adapt', 'added', 'admin',
-    'admit', 'adopt', 'adult', 'advance', 'advice', 'advise', 'affair', 'afford', 'afraid', 'after',
-    'again', 'agent', 'agree', 'ahead', 'alarm', 'album', 'alert', 'alien', 'align', 'alike',
-    'alive', 'allow', 'almost', 'alone', 'along', 'alter', 'amber', 'amend', 'among', 'amount',
-    'ample', 'angel', 'anger', 'angle', 'angry', 'animal', 'ankle', 'annex', 'annual', 'answer',
-    'antique', 'anxiety', 'apart', 'apple', 'apply', 'apron', 'arena', 'argue', 'arise', 'array',
-    'arrow', 'arson', 'aside', 'asked', 'asset', 'atlas', 'attack', 'attend', 'attic', 'audio',
-    'audit', 'author', 'autumn', 'avail', 'avenue', 'avoid', 'awake', 'award', 'aware', 'await',
-    'azure',
-
-    // B words
-    'babel', 'bacon', 'badge', 'badly', 'bagel', 'baker', 'bases', 'basic', 'basin', 'basis',
-    'batch', 'bathe', 'beach', 'beans', 'bears', 'beast', 'beats', 'began', 'begin', 'being',
-    'belly', 'below', 'bench', 'berry', 'bikes', 'bills', 'binds', 'birch', 'birds', 'birth',
-    'black', 'blade', 'blame', 'blank', 'blast', 'blaze', 'bleak', 'bleed', 'blend', 'bless',
-    'blink', 'bliss', 'block', 'blood', 'bloom', 'blown', 'blues', 'board', 'boats', 'bobby',
-    'bogey', 'bonds', 'bones', 'bonus', 'books', 'boost', 'booth', 'booze', 'bored', 'bound',
-    'boxes', 'brain', 'brand', 'brass', 'brave', 'bread', 'break', 'breed', 'brick', 'bride',
-    'brief', 'bring', 'brink', 'brisk', 'broad', 'broke', 'brown', 'brush', 'brute', 'buddy',
-    'budge', 'build', 'built', 'bulky', 'bumps', 'bunny', 'burst', 'buses', 'buyer', 'bytes',
-
-    // C words
-    'cabin', 'cable', 'cache', 'cages', 'cakes', 'calif', 'calls', 'calms', 'camel', 'camps',
-    'canal', 'candy', 'canes', 'canny', 'canoe', 'canon', 'caper', 'cards', 'cared', 'cares',
-    'cargo', 'carol', 'carry', 'cases', 'casino', 'catch', 'cater', 'cattle', 'cause', 'caves',
-    'cease', 'cedar', 'cells', 'chain', 'chair', 'chalk', 'champ', 'chant', 'chaos', 'chaps',
-    'charm', 'chars', 'chart', 'chase', 'chasm', 'cheap', 'cheat', 'check', 'cheek', 'cheer',
-    'chess', 'chest', 'chick', 'chief', 'child', 'chili', 'chime', 'china', 'chips', 'choke',
-    'choice', 'choir', 'chops', 'chord', 'chore', 'chose', 'chuckle', 'chunk', 'churn', 'cider',
-    'cigar', 'cinch', 'civic', 'civil', 'claim', 'clamp', 'clang', 'clans', 'clash', 'clasp',
-    'class', 'claws', 'clean', 'clear', 'cleat', 'clerk', 'click', 'cliff', 'climb', 'cling',
-    'cloak', 'clock', 'clone', 'close', 'cloth', 'cloud', 'clown', 'clubs', 'clues', 'coach',
-    'coals', 'coarse', 'coast', 'coats', 'cobra', 'cocks', 'cocoa', 'coded', 'codes', 'cords',
-    'coils', 'coins', 'cokes', 'colds', 'colic', 'comet', 'comic', 'comma', 'common', 'cones',
-    'coral', 'cords', 'cores', 'corgi', 'corks', 'corny', 'corps', 'costs', 'couch', 'cough',
-    'could', 'count', 'coupe', 'court', 'couth', 'coven', 'cover', 'covet', 'cowed', 'cower',
-    'coyly', 'crabs', 'cracks', 'craft', 'cramp', 'crane', 'crank', 'crape', 'crash', 'crate',
-    'crave', 'crawl', 'craws', 'craze', 'crazy', 'creak', 'cream', 'crease', 'create', 'creep',
-    'crest', 'crews', 'cries', 'crime', 'crimp', 'crisp', 'croak', 'crock', 'crook', 'crops',
-    'cross', 'croup', 'crowd', 'crown', 'crows', 'crude', 'cruel', 'crumb', 'crush', 'crust',
-    'crypt', 'cubed', 'cubes', 'cubic', 'cubit', 'cudge', 'cuffs', 'culls', 'culprit', 'curve',
-    'curly', 'curry', 'curse', 'curve', 'cushy', 'cusp', 'cusps', 'custy', 'cutie', 'cycle',
-    'cyclic', 'cypress',
-
-    // D words
-    'daily', 'dairy', 'daisy', 'dales', 'dally', 'dames', 'damns', 'damps', 'dance', 'dandy',
-    'danes', 'dared', 'dares', 'darks', 'darned', 'darts', 'dated', 'dates', 'datum', 'daubs',
-    'dawdle', 'dawns', 'dazed', 'dealt', 'dears', 'deary', 'death', 'debit', 'debts', 'debug',
-    'debut', 'decal', 'decay', 'deeds', 'deepen', 'deeply', 'deeps', 'deers', 'defat', 'defect',
-    'defer', 'defile', 'define', 'degree', 'deice', 'deify', 'deity', 'dejected', 'delay', 'deled',
-    'delft', 'delis', 'delta', 'deluge', 'delve', 'demand', 'demean', 'demit', 'demon', 'demur',
-    'denial', 'denied', 'denier', 'denies', 'denizen', 'denote', 'dense', 'denser', 'dental',
-    'dentil', 'deny', 'denys', 'depart', 'depend', 'depict', 'deploy', 'deport', 'depose',
-    'depress', 'depute', 'deputy', 'derive', 'descend', 'descent', 'describe', 'desert',
-    'deserve', 'design', 'desire', 'desist', 'desk', 'desolate', 'despair', 'despise', 'despite',
-    'despoil', 'dessert', 'destiny', 'destroy', 'detach', 'detail', 'detain', 'detect', 'deter',
-    'detergent', 'detest', 'detour', 'detoxify', 'detract', 'deuce', 'deuces', 'device',
-    'devil', 'devise', 'devoid', 'devolve', 'devote', 'devour', 'devout', 'dewed', 'dewier',
-    'dewily', 'dewlap', 'dexterity', 'dextral', 'dextrin', 'dextrose',
-
-    // E words
-    'eager', 'eagles', 'eagled', 'earned', 'earner', 'earths', 'earthy', 'easels', 'easement',
-    'easied', 'easier', 'easies', 'easily', 'easing', 'easts', 'easter', 'eastern', 'eaters',
-    'eating', 'eaved', 'ebbed', 'ebbing', 'ebonite', 'ebony', 'ebullient', 'echoed', 'echoes',
-    'eclipse', 'ecru', 'ecstasy', 'ecstatic', 'ectomorph', 'edge', 'edged', 'edgier', 'edgily',
-    'edging', 'edible', 'edict', 'edicts', 'edifice', 'edified', 'edifies', 'edify', 'edited',
-    'editor', 'edits', 'educate', 'educed', 'educes', 'eely', 'eerie', 'eerier', 'eeriest',
-    'eerily', 'efface', 'effect', 'effects', 'effete', 'efficacy', 'efficient', 'effigies',
-    'effigy', 'effuse', 'egad', 'egg', 'egged', 'egging', 'eggiest', 'egging', 'eggplant',
-    'eggs', 'egis', 'egoist', 'egoism', 'egotism', 'egotist', 'egress', 'egrets', 'egypt',
-    'eight', 'eighty', 'eject', 'ejects', 'eked', 'eking', 'elaborate', 'elapse', 'elapsed',
-    'elasticity', 'elate', 'elated', 'elates', 'elation', 'elbow', 'elbows', 'elder', 'elders',
-    'eldest', 'elders', 'eldrich', 'elect', 'elects', 'elegant', 'elegies', 'elegist', 'elegy',
-    'element', 'elements', 'elevate', 'elevated', 'elevates', 'elevation', 'elevator',
-    'elevens', 'eleventh', 'elf', 'elfin', 'elfish', 'elfishly', 'elicit', 'elicited', 'elicits',
-
-    // F words
-    'fabled', 'fables', 'fabric', 'fabrics', 'fabulous', 'facade', 'face', 'faced', 'facer',
-    'facers', 'faces', 'facet', 'faceted', 'facets', 'facial', 'facials', 'facile', 'facings',
-    'facsimile', 'fact', 'faction', 'factions', 'factious', 'factor', 'factors', 'factory',
-    'facts', 'factual', 'faculty', 'faded', 'fader', 'faders', 'fades', 'fading', 'faery',
-    'fagot', 'fagots', 'fahren', 'faience', 'failed', 'failing', 'failings', 'fails', 'failure',
-    'fain', 'faint', 'fainted', 'fainter', 'faintest', 'faintly', 'faints', 'faired', 'fairies',
-    'fairing', 'fairish', 'fairly', 'fairness', 'fairs', 'fairway', 'fairy', 'faith', 'faithed',
-    'faithful', 'faiths', 'fake', 'faked', 'faker', 'fakers', 'fakes', 'faking', 'fakir', 'fakirs',
-    'falcon', 'falconry', 'falcons', 'fall', 'fallacy', 'fallen', 'fallibility', 'fallible',
-    'falling', 'falls', 'fallout', 'fallow', 'false', 'falsely', 'falsehood', 'falseness',
-    'falseties', 'falsetto', 'falsified', 'falsifies', 'falsify', 'falsity', 'falter', 'faltered',
-    'faltering', 'falters', 'famed', 'fames', 'familiar', 'familiarity', 'familiarize',
-    'familiarly', 'families', 'family', 'famine', 'famines', 'famished', 'famous', 'famously',
-    'fan', 'fanatic', 'fanatical', 'fanaticism', 'fanatics', 'fancied', 'fancier', 'fanciers',
-    'fancier', 'fancies', 'fanciest', 'fancily', 'fancy', 'fancying', 'fandangle', 'fandango',
-    'fane', 'fanfare', 'fanfares', 'fang', 'fanged', 'fangs', 'fanned', 'fanning', 'fanons',
-    'fans', 'fantasia', 'fantasias', 'fantasies', 'fantasize', 'fantastic', 'fantastically',
-    'fantasy', 'fantod', 'fantods', 'faqir', 'far', 'faraway', 'farce', 'farced', 'farces',
-    'farcical', 'farcing', 'fard', 'fare', 'fared', 'fares', 'farewell', 'farewells', 'farina',
-    'farinaceous', 'faring', 'farino', 'farl', 'farm', 'farmed', 'farmer', 'farmers', 'farming',
-    'farmland', 'farms', 'farmyard', 'farol', 'farrow', 'farrows', 'farther', 'farthest',
-    'farthing', 'farthings', 'fascia', 'fasciae', 'fascias', 'fascias', 'fascicle', 'fascinate',
-    'fascinated', 'fascinates', 'fascinating', 'fascination', 'fascism', 'fascist', 'fascistic',
-    'fascists', 'fashion', 'fashioned', 'fashioning', 'fashions', 'fast', 'fasted', 'fasten',
-    'fastened', 'fastener', 'fasteners', 'fastening', 'fastens', 'faster', 'fastest', 'fasting',
-    'fastings', 'fastly', 'fastness', 'fastnesses', 'fasts', 'fat', 'fatal', 'fatalism', 'fatalist',
-    'fatalistic', 'fatality', 'fatally', 'fated', 'fateful', 'fatefully', 'fates', 'father',
-    'fathered', 'fathering', 'fatherly', 'fathers', 'fathom', 'fathomable', 'fathomed',
-    'fathoming', 'fathoms', 'fatigue', 'fatigued', 'fatigues', 'fatiguing', 'fats', 'fatty',
-    'faucal', 'faucals', 'faucet', 'faucets', 'fauna', 'faunal', 'faunas', 'faun', 'faunae',
-    'faunas', 'fauns', 'faux', 'favor', 'favorable', 'favorably', 'favored', 'favoring', 'favorite',
-    'favorites', 'favoritism', 'favors', 'favour', 'favoured', 'favouring', 'favourite',
-    'favourites', 'favouritism', 'favours', 'fawn', 'fawned', 'fawning', 'fawningly', 'fawns',
-    'fax', 'faxed', 'faxes', 'faxing', 'fay', 'fays', 'faze', 'fazed', 'fazes', 'fazing',
-
-    // G words
-    'gabled', 'gables', 'gadabout', 'gadabouts', 'gadding', 'gadfly', 'gadget', 'gadgetry',
-    'gadgets', 'gaelic', 'gaels', 'gaff', 'gaffed', 'gaffer', 'gaffers', 'gaffing', 'gaffs',
-    'gagged', 'gagger', 'gaggers', 'gagging', 'gaggle', 'gaggles', 'gagman', 'gagmen', 'gags',
-    'gaiety', 'gaily', 'gain', 'gained', 'gainers', 'gainful', 'gainfully', 'gaining', 'gainless',
-    'gains', 'gainsaid', 'gainsay', 'gainsayer', 'gainsayers', 'gainsays', 'gainsaying',
-    'gait', 'gaited', 'gaiter', 'gaiters', 'gaits', 'gal', 'gala', 'galactic', 'galago', 'galagos',
-    'galant', 'galas', 'galatea', 'galated', 'galeas', 'galeate', 'galeated', 'galeazze', 'galea',
-    'galeae', 'galeas', 'galeass', 'galeate', 'galeated', 'galena', 'galenic', 'galenica',
-    'galeniches', 'galenics', 'galenim', 'galens', 'gales', 'galeta', 'galetas', 'galia', 'galias',
-    'galipot', 'galipots', 'galivant', 'gall', 'gallant', 'gallantly', 'gallantries', 'gallantry',
-    'gallants', 'galleass', 'galleasses', 'galena', 'galleon', 'galleons', 'galleria', 'galleries',
-    'gallery', 'galley', 'galleys', 'galliard', 'galliards', 'galliass', 'gallibeggar',
-    'gallicon', 'gallied', 'gallies', 'galliforest', 'galligantus', 'galligas', 'gallimaulfry',
-    'gallimaury', 'galline', 'gallingly', 'gallingness', 'gallinipper', 'gallinisters',
-    'gallinipers', 'gallinipper', 'gallioot', 'gallipers', 'gallipodia', 'gallipolis', 'gallipot',
-    'gallipots', 'gallium', 'galliumed', 'galliums', 'gallivant', 'gallivanted', 'gallivanter',
-    'gallivanters', 'gallivanting', 'gallivants', 'gallize', 'gallized', 'gallizes', 'gallizing',
-    'galloches', 'galloot', 'gallo', 'gallop', 'gallopage', 'galloped', 'galloper', 'gallopers',
-    'galloping', 'gallops', 'gallos', 'galloot', 'gallop', 'galloots', 'gallop', 'gallouses',
-    'gallows', 'gallud', 'gallus', 'galop', 'galopade', 'galopades', 'galoped', 'galopine',
-    'galopings', 'galops', 'galosh', 'galoshe', 'galoshed', 'galoshes', 'galoshing', 'gals',
-    'galumph', 'galumphed', 'galumphing', 'galumphs', 'galuth', 'galuths', 'galuth', 'galvanic',
-    'galvanical', 'galvanically', 'galvanism', 'galvanist', 'galvanists', 'galvanization',
-    'galvanize', 'galvanized', 'galvanizer', 'galvanizers', 'galvanizes', 'galvanizing',
-    'galvanometer', 'galvanometers', 'galveston', 'gam', 'gamash', 'gamashe', 'gamashen',
-    'gamasher', 'gamashes', 'gamasis', 'gamay', 'gamays', 'gamb', 'gamba', 'gambade', 'gambades',
-    'gambadoing', 'gambadoe', 'gambadoes', 'gambadoing', 'gambadoing', 'gambado', 'gambadoes',
-    'gambador', 'gambadors', 'gambados', 'gambadoes', 'gambadoing', 'gambax', 'gambeson',
-    'gambesons', 'gambetas', 'gambetus', 'gambia', 'gambian', 'gambians', 'gambias', 'gambica',
-    'gambiae', 'gambiae', 'gambier', 'gambiers', 'gambiles', 'gambil', 'gambil', 'gambiles',
-    'gambilla', 'gambir', 'gambirs', 'gambison', 'gambisons', 'gambisoned', 'gambited',
-    'gambiter', 'gambiters', 'gambiting', 'gambits', 'gamble', 'gambled', 'gambler', 'gamblers',
-    'gambles', 'gambling', 'gamblings', 'gambol', 'gamboled', 'gambolled', 'gamboling',
-    'gambolled', 'gambolling', 'gambols', 'gambo', 'gamboge', 'gamboges', 'gambol', 'gambolled',
-    'gambolling', 'gamboging', 'gambos', 'gambrel', 'gambrels', 'gambreshed', 'gambria',
-    'gambries', 'gambries', 'gambris', 'gambrite', 'gambrites', 'gambrius', 'gambrius',
-    'gambrius', 'gambrium', 'gambrivs', 'gambrome', 'gambromene', 'gambromene', 'gambromenes',
-    'gambromenes', 'gambromene', 'gambromenes', 'gambromenes', 'gambromenes', 'gamby',
-    'gambys', 'game', 'gamecock', 'gamecocked', 'gamecocking', 'gamecocks', 'gamed', 'gameful',
-    'gamefully', 'gamefulness', 'gamekeeper', 'gamekeepers', 'gameless', 'gamelessly', 'gameless',
-    'gamelings', 'gamely', 'gameness', 'gamer', 'gamers', 'games', 'gamesmanship', 'gamesmen',
-    'gamesman', 'gamesmen', 'gamesome', 'gamesomely', 'gamesomeness', 'gamesmen', 'gamest',
-    'gamester', 'gamesters', 'gamic', 'gamick', 'gamicks', 'gamical', 'gamically', 'gamier',
-    'gamiest', 'gamification', 'gamified', 'gamifies', 'gamify', 'gamifying', 'gamified',
-    'gamified', 'gamified', 'gamification', 'gamification', 'gamier', 'gamiest', 'gamiest',
-    'gamifier', 'gamified', 'gamification', 'gaming', 'gamings', 'gamma', 'gammas', 'gammat',
-    'gammatidae', 'gammated', 'gammatids', 'gammatidae', 'gammarid', 'gammaridea',
-    'gammarideae', 'gammarid', 'gammarids', 'gammarinae', 'gammarinas', 'gammaridea',
-    'gammaridea', 'gammarideae', 'gammaridean', 'gammarideae', 'gammaridea', 'gammaridean',
-    'gammaridean', 'gammarideae', 'gammaridean', 'gammaridean', 'gammarideae', 'gammaridean',
-    'gammaridean', 'gammaridean', 'gammarideae', 'gammaridean', 'gammarideae', 'gammaridean',
-    'gammarideae', 'gammarideae', 'gammaridea', 'gammarideae', 'gammaridean', 'gammaridean',
-    'gammarideae', 'gammarideae', 'gammaridean', 'gammaridean', 'gammaridean', 'gammaridean',
-
-    // Common words H-Z
-    'habit', 'hacks', 'hails', 'hairs', 'hairy', 'halos', 'halts', 'halve', 'halves', 'halls',
-    'handy', 'hands', 'hangs', 'happy', 'hardy', 'harms', 'harsh', 'haste', 'hasty', 'hatch',
-    'hated', 'hater', 'hates', 'hauls', 'haunt', 'haven', 'havens', 'havoc', 'hawks', 'heads',
-    'heals', 'heaps', 'heard', 'hears', 'heart', 'heats', 'heavy', 'hedgy', 'heels', 'heirs',
-    'helix', 'hello', 'helps', 'herbs', 'herds', 'heron', 'hinge', 'hints', 'hired', 'hires',
-    'hobby', 'holds', 'holes', 'holly', 'homes', 'honey', 'honor', 'hoods', 'hoofs', 'hooks',
-    'hoops', 'hoped', 'hopes', 'horns', 'horse', 'hosed', 'hoses', 'hosts', 'hotel', 'hours',
-    'house', 'hover', 'howls', 'hubby', 'hucking', 'huffs', 'huffy', 'hulks', 'hulls', 'humid',
-    'humor', 'humps', 'hunks', 'hunts', 'hurls', 'hurry', 'hurts', 'husks', 'husky', 'hyena',
-    'hymns', 'hypes', 'hyper',
-
-    'icons', 'ideas', 'ideal', 'idles', 'idols', 'igloo', 'image', 'imago', 'imbed', 'imply',
-    'inbox', 'incur', 'index', 'india', 'infer', 'inked', 'inner', 'input', 'insist', 'intend',
-    'inter', 'iodid', 'iodine', 'irate', 'irked', 'irons', 'is', 'isles', 'issue', 'italy',
-    'itch', 'itchy', 'items', 'ivory',
-
-    'jails', 'jazzy', 'jeans', 'jeeps', 'jeers', 'jells', 'jelly', 'jerks', 'jerry', 'jeers',
-    'jet', 'jetty', 'jewel', 'jiffy', 'jiggy', 'jihad', 'jilts', 'jimmy', 'jingo', 'jinni',
-    'jived', 'jivers', 'jives', 'jobed', 'joist', 'joked', 'joker', 'jokes', 'joking', 'jolly',
-    'jolts', 'joshed', 'joust', 'jowly', 'joyed', 'joying', 'joyous', 'joust', 'judge', 'judos',
-    'juggler', 'juice', 'juicy', 'jumbo', 'jumps', 'jumpy', 'junco', 'junks', 'junky', 'jural',
-    'juror', 'jurors', 'jurat', 'jurats', 'juried', 'jurist', 'jury', 'justs', 'jute', 'jutes',
-
-    'kales', 'kayak', 'kayoed', 'keels', 'keened', 'keeps', 'kegs', 'kelps', 'kelpy', 'kelves',
-    'kelvin', 'kenaf', 'kenaf', 'kench', 'kendo', 'kenned', 'kennel', 'kenos', 'kente', 'kents',
-    'kepi', 'kepis', 'keppel', 'kerbstone', 'kerbs', 'kerchief', 'kerf', 'kerfs', 'kerfuffle',
-    'kermes', 'kermess', 'kermit', 'kern', 'kerns', 'kernel', 'kernels', 'kerns', 'kerosene',
-    'kerry', 'kersey', 'kerseys', 'kerseys', 'kestrel', 'kestrel', 'ketchup', 'ketone', 'ketones',
-    'ketose', 'ketoses', 'kettle', 'kettles', 'ketubim', 'ketubim', 'kevel', 'kevels', 'kevil',
-    'kevils', 'kevlar', 'kevlar', 'kewl', 'key', 'keyboard', 'keyboarded', 'keyboarding',
-    'keyboards', 'keyed', 'keyhole', 'keyholes', 'keying', 'keyless', 'keyline', 'keylines',
-    'keynote', 'keynoted', 'keynoter', 'keynoters', 'keynotes', 'keynoting', 'keypunch',
-    'keypunched', 'keypuncher', 'keypunchers', 'keypunches', 'keypunching', 'keys', 'keystone',
-    'keystoned', 'keystones', 'keystoning', 'keyway', 'keyways', 'keyword', 'keywords',
-
-    'label', 'labor', 'laced', 'laces', 'lacing', 'lacked', 'lackey', 'lacks', 'lacquer', 'lactic',
-    'lactose', 'lactic', 'lacuna', 'lacunas', 'lacunae', 'lacunose', 'lacustral', 'lacustric',
-    'lacustrine', 'lacy', 'ladanum', 'ladder', 'ladders', 'laded', 'laden', 'lader', 'laders',
-    'ladies', 'lading', 'ladings', 'lads', 'lady', 'ladybug', 'ladybugs', 'ladyfinger',
-    'ladyfingers', 'ladylike', 'ladyship', 'ladyships', 'laevo', 'laevogyrate', 'laevogyre',
-    'laevorotatory', 'laevorotatory', 'laevulose', 'laevulose', 'laevo', 'laevulose',
-    'laevuloses', 'laevuloses', 'lag', 'lagan', 'lagans', 'lager', 'lagers', 'lagging',
-    'laggings', 'laggard', 'laggardly', 'laggardness', 'laggards', 'lagged', 'lagger',
-    'laggers', 'laggery', 'lagging', 'laggingly', 'laggings', 'lagoon', 'lagoonal', 'lagoons',
-    'lagos', 'lags', 'laguna', 'lagunas', 'lagunas', 'lagune', 'lagunes', 'lah', 'lahar',
-    'lahars', 'lahs', 'laic', 'laical', 'laicalism', 'laicalize', 'laicalized', 'laicalizes',
-    'laicalizing', 'laically', 'laicism', 'laics', 'laida', 'laided', 'laide', 'laided',
-    'laiden', 'laider', 'laiders', 'laides', 'laiding', 'laids', 'laigh', 'laighe', 'laighs',
-    'lain', 'lair', 'laired', 'lairing', 'lairs', 'lairy', 'laith', 'laithe', 'laithes',
-    'laiths', 'laithy', 'laits', 'laity', 'lake', 'laked', 'lakeland', 'lakelands', 'laker',
-    'lakers', 'lakes', 'lakeshore', 'lakeshores', 'lakeside', 'lakesides', 'laking', 'lakish',
-    'lakist', 'lakists', 'lakistical', 'lakists', 'laky', 'laky', 'laked', 'lakes', 'laking',
-    'lakish', 'lakist', 'lakists', 'lakistic', 'lakistically', 'lakists', 'laky', 'laky',
-    'lakydomain', 'lakydomain', 'laky', 'laky', 'lakily', 'lakily', 'lakily', 'lakily',
-    'lakiness', 'lakiness', 'lakiness', 'lakiness', 'laky', 'laky', 'laky', 'laky', 'laky',
-    'laks', 'laky', 'laky', 'laky', 'laky', 'laky', 'laky', 'laky', 'laky', 'laky', 'laky',
-    'lakya', 'laks', 'laky', 'lakvian', 'laky', 'lakya', 'laks', 'laky', 'laky', 'laky',
-    'laky', 'laks', 'laky', 'laky', 'laky', 'laky', 'laky', 'laky', 'laky', 'laky', 'laky',
-    'laky',
-
-    'macaw', 'macro', 'madam', 'madcap', 'madden', 'madder', 'madded', 'madding', 'made',
-    'madeira', 'madeleine', 'madeleines', 'madeline', 'madelins', 'madelines', 'maderize',
-    'maderized', 'maderizes', 'maderizing', 'madero', 'maderos', 'madest', 'madge', 'madges',
-    'madhab', 'madhabi', 'madhabs', 'madhuca', 'madhouse', 'madhouses', 'madid', 'madidly',
-    'madiera', 'madieras', 'madie', 'madies', 'madieu', 'madhab', 'madhabs', 'madhuca',
-    'madhyama', 'madhyamakas', 'madhyamaka', 'madhyas', 'madly', 'madman', 'madmen',
-    'madnep', 'madneps', 'madness', 'madnesses', 'madonna', 'madonnae', 'madonnas', 'madoqua',
-    'madoquas', 'madras', 'madrase', 'madrases', 'madrasah', 'madrasahs', 'madrasas', 'madrasih',
-    'madrasihs', 'madrasih', 'madrasihs', 'madrasih', 'madrasihs', 'madrassah', 'madrassahs',
-    'madrassah', 'madrassahs', 'madras', 'madras', 'madras', 'madras', 'madras', 'madras',
-    'madrase', 'madrase', 'madrase', 'madrase', 'madrases', 'madrase', 'madrase', 'madrase',
-    'madrases', 'madrase', 'madrases', 'madrase', 'madrases', 'madrase', 'madrases', 'madrase',
-    'madrase', 'madrase', 'madrases', 'madrase', 'madrases', 'madrase', 'madrases', 'madrase',
-    'madrases', 'madrase', 'madrases', 'madrase', 'madrase', 'madrases', 'madrase', 'madrases',
-    'madrase', 'madrase', 'madrase', 'madrase', 'madrase', 'madrase', 'madrase', 'madrase',
-
-    'nacho', 'nails', 'naive', 'naked', 'named', 'names', 'nanny', 'nasal', 'nasty', 'natal',
-    'naves', 'naves', 'naval', 'navels', 'navel', 'naves', 'navigate', 'navy', 'naves',
-    'nazin', 'nazis', 'neaps', 'nears', 'neats', 'necks', 'needed', 'needle', 'needs', 'negat',
-    'neigh', 'nerve', 'nerves', 'nervy', 'nests', 'netty', 'neural', 'neuter', 'never',
-    'newer', 'newly', 'newts', 'nexus', 'nicer', 'niche', 'nicks', 'niece', 'nifty', 'night',
-    'nines', 'ninny', 'ninth', 'nioter', 'nippy', 'niter', 'niton', 'nitro', 'nitty', 'nixed',
-    'nixes', 'noble', 'nobly', 'noded', 'nodes', 'noire', 'noisy', 'nomad', 'nomes', 'nonce',
-    'nones', 'nooks', 'noose', 'nopes', 'norms', 'north', 'nosed', 'noses', 'nosey', 'notch',
-    'noted', 'noter', 'notes', 'nothing', 'notice', 'notify', 'noting', 'noun', 'nouns',
-    'nourish', 'novas', 'novel', 'novels', 'novena', 'noxious', 'nozzle', 'nuance', 'nubbin',
-    'nubby', 'nubia', 'nubian', 'nubias', 'nubile', 'nucha', 'nuchal', 'nuchas', 'nuche',
-    'nuches', 'nuchs', 'nucleal', 'nuclear', 'nuclease', 'nucleases', 'nucleate', 'nucleated',
-    'nucleates', 'nucleating', 'nucleation', 'nuclei', 'nucleic', 'nucleide', 'nucleides',
-    'nuclein', 'nucleins', 'nucleolar', 'nucleole', 'nucleoles', 'nucleolid', 'nucleolids',
-    'nucleolis', 'nucleolus', 'nucleon', 'nucleonic', 'nucleonics', 'nucleons', 'nucleoprotein',
-    'nucleoproteins', 'nucleus', 'nucleuses', 'nuculae', 'nucula', 'nucules', 'nucules',
-    'nudable', 'nudal', 'nudally', 'nudation', 'nudations', 'nudatorial', 'nude', 'nudely',
-    'nudeness', 'nuder', 'nudes', 'nudest', 'nudge', 'nudged', 'nudger', 'nudgers', 'nudges',
-    'nudging', 'nudie', 'nudies', 'nudification', 'nudified', 'nudifies', 'nudify', 'nudifying',
-    'nudism', 'nudisms', 'nudist', 'nudistic', 'nudistically', 'nudists', 'nudity', 'nudzh',
-    'nudzhe', 'nudzhe', 'nudzhed', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhed', 'nudzhe',
-    'nudzhe', 'nudzhe', 'nudzhe', 'nudzhed', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe',
-    'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe',
-    'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe',
-    'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe',
-    'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe',
-    'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe',
-    'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe',
-    'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe', 'nudzhe',
-
-    'oaken', 'oared', 'oarer', 'oarier', 'oariest', 'oarilock', 'oarlock', 'oarlocks', 'oars',
-    'oarsman', 'oarsmen', 'oarse', 'oars', 'oars', 'oarse', 'oarsman', 'oarsmen', 'oars',
-    'oarsy', 'oasis', 'oasises', 'oast', 'oasts', 'oaten', 'oater', 'oaters', 'oaths',
-    'oatier', 'oatiest', 'oatlike', 'oatmeal', 'oatmeals', 'oats', 'oaty', 'oaves', 'obeli',
-    'obeah', 'obeahs', 'obedience', 'obediences', 'obedient', 'obediential', 'obedientiality',
-    'obedientiaries', 'obedientiaries', 'obedientiary', 'obediently', 'obelize', 'obelisks',
-    'obelis', 'obelis', 'obelion', 'obelions', 'obeli', 'obelis', 'obelis', 'obelisk',
-    'obelisks', 'obelisks', 'obelism', 'obelisms', 'obelismal', 'obelismal', 'obelismal',
-    'obelismal', 'obelisms', 'obelism', 'obelisms', 'obelism', 'obelisms', 'obelis',
-    'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism',
-    'obelis', 'obelis', 'obelis', 'obelis', 'obelis', 'obelis', 'obelis', 'obelis',
-    'obelise', 'obelised', 'obelises', 'obelising', 'obelism', 'obelism', 'obelism',
-    'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism',
-    'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism',
-    'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism',
-    'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism',
-    'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism',
-    'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism', 'obelism',
-
-    'paint', 'pains', 'paint', 'pairs', 'paled', 'paler', 'pales', 'paling', 'palls', 'palms',
-    'palmy', 'palsy', 'palter', 'palty', 'panda', 'pandy', 'paned', 'panel', 'panels', 'panes',
-    'pangs', 'pangs', 'panic', 'panics', 'panicy', 'panned', 'panner', 'panners', 'panning',
-    'pannus', 'panpan', 'panpipe', 'panpipes', 'pansied', 'pansies', 'pansy', 'panted',
-    'panter', 'panters', 'pantheism', 'pantheisms', 'pantheist', 'pantheistic', 'pantheistically',
-    'pantheists', 'pantheon', 'pantheons', 'panther', 'panthers', 'panthera', 'panthera',
-    'pantheress', 'panthers', 'panthers', 'pantheress', 'panthera', 'panthera', 'panthera',
-    'pantheress', 'panthers', 'panthers', 'panthers', 'pantheress', 'panthers', 'pantheress',
-    'panthers', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress',
-    'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers',
-    'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers',
-    'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'panthers',
-    'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress',
-    'panthers', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress',
-    'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers',
-    'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers',
-    'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress',
-    'panthers', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress',
-    'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers',
-    'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'panthers',
-    'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress',
-    'panthers', 'panthers', 'pantheress', 'panthers', 'pantheress', 'panthers', 'pantheress',
-
-    'quick', 'quack', 'quail', 'quake', 'qualm', 'quant', 'quark', 'quart', 'quartz', 'quasi',
-    'queen', 'queer', 'quell', 'query', 'quest', 'queue', 'quick', 'quids', 'quiet', 'quiff',
-    'quill', 'quilt', 'quince', 'quine', 'quins', 'quint', 'quiny', 'quips', 'quire', 'quirk',
-    'quirt', 'quite', 'quits', 'quiver', 'quixote', 'quiz', 'quizzes', 'quizzer', 'quizzers',
-    'quizzical', 'quizzically', 'quizzicality', 'quizzicality', 'quizzical', 'quizzically',
-
-    'rabbi', 'rabbit', 'rabble', 'rabid', 'rabies', 'raccoon', 'race', 'raced', 'racer', 'racers',
-    'races', 'racing', 'racist', 'racism', 'racial', 'racially', 'raced', 'races', 'racing',
-    'rack', 'racked', 'racket', 'racks', 'rackety', 'racking', 'racks', 'racy', 'radar', 'radder',
-    'raddest', 'raddie', 'raddie', 'raddie', 'raddies', 'raddie', 'raddie', 'raddie', 'raddies',
-    'raddie', 'raddie', 'raddies', 'raddie', 'raddie', 'raddies', 'raddie', 'raddies',
-
-    'sadly', 'safer', 'safes', 'safest', 'safety', 'safing', 'safior', 'safior', 'safires',
-    'safir', 'safish', 'safishes', 'safism', 'safism', 'safisms', 'safision', 'safision',
-    'safisions', 'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite',
-    'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic',
-    'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites',
-    'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite',
-    'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic',
-    'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites',
-    'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite',
-    'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic',
-    'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites',
-    'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite',
-    'safites', 'safitic', 'safite', 'safites', 'safitic', 'safite', 'safites', 'safitic',
-
-    'table', 'taboo', 'tabor', 'tabors', 'tabour', 'tabours', 'tabriz', 'tabs', 'tabular',
-    'tabulate', 'tabulated', 'tabulates', 'tabulating', 'tabulation', 'tabulations', 'tabule',
-    'tabules', 'tabuli', 'tabulis', 'tabulae', 'tabular', 'tabularly', 'tabulate', 'tabulated',
-    'tabulates', 'tabulating', 'tabulation', 'tabulis', 'tabuli', 'tabulis', 'tabulis',
-    'tabulis', 'tabulis', 'tabulis', 'tabulis', 'tabulis', 'tabulis', 'tabulis', 'tabulis',
-    'tabulis', 'tabulis', 'tabulis', 'tabulis', 'tabulis', 'tabulis', 'tabulis', 'tabulis',
-
-    'ultra', 'umami', 'umbel', 'umber', 'umble', 'umbles', 'umbo', 'umbos', 'umbra', 'umbrae',
-    'umbraco', 'umbrage', 'umbrages', 'umbrageous', 'umbrageously', 'umbrageousness', 'umbral',
-    'umbras', 'umbratic', 'umbratical', 'umbratile', 'umbrated', 'umbrated', 'umbrated',
-    'umbrates', 'umbrating', 'umbration', 'umbrations', 'umbratiousness', 'umbratiousness',
-    'umbratic', 'umbratical', 'umbratile', 'umbrated', 'umbrated', 'umbrated', 'umbrates',
-
-    'vague', 'vails', 'valet', 'valid', 'valor', 'value', 'valve', 'vamps', 'vaned', 'vanes',
-    'vangs', 'vanna', 'vanns', 'vapor', 'varia', 'varied', 'varies', 'varlet', 'varnas',
-    'varves', 'vassal', 'vasts', 'vater', 'vatus', 'vault', 'vaults', 'vaunt', 'vaunts',
-    'vaunt', 'vauted', 'vautes', 'vavels', 'vaunt', 'vaus', 'vaunt', 'vault', 'vaunt',
-    'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts',
-    'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts',
-    'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts',
-    'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts',
-    'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts',
-    'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts', 'vauts',
-
-    'wager', 'wages', 'wagon', 'waifs', 'wails', 'waist', 'waits', 'waive', 'waived', 'waiver',
-    'waives', 'waking', 'waled', 'wales', 'walks', 'walls', 'waltz', 'wambl', 'wamble', 'wambles',
-    'wambling', 'wamou', 'wamou', 'wampoa', 'wampoas', 'wampish', 'wampish', 'wampish',
-    'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly',
-    'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly',
-    'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly',
-    'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly',
-    'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly',
-    'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly', 'wampishly',
-
-    'yacht', 'yachts', 'yahoo', 'yahoos', 'yahoo', 'yahoos', 'yahoo', 'yahoos', 'yahoo',
-    'yahoos', 'yahoo', 'yahoos', 'yahoo', 'yahoos', 'yahoo', 'yahoos', 'yahoo', 'yahoos',
-    'yahoo', 'yahoos', 'yahoo', 'yahoos', 'yahoo', 'yahoos', 'yahoo', 'yahoos', 'yahoo',
-    'yahoos', 'yahoo', 'yahoos', 'yahoo', 'yahoos', 'yahoo', 'yahoos', 'yahoo', 'yahoos',
-
-    'zebra', 'zebus', 'zests', 'zesty', 'zetas', 'zibet', 'zibeth', 'zibra', 'zibra', 'zibras',
-    'zibras', 'zibra', 'zibras', 'zibra', 'zibras', 'zibra', 'zibras', 'zibra', 'zibras',
-    'zibra', 'zibras', 'zibra', 'zibras', 'zibra', 'zibras', 'zibra', 'zibras', 'zibra', 'zibras'
+// Answer words: common, well-known 5-letter words for daily/practice puzzles
+const ANSWER_WORDS = [
+    // A
+    'ABOUT','ABOVE','ABUSE','ACTOR','ACUTE','ADMIT','ADOPT','ADULT','AFTER','AGAIN',
+    'AGENT','AGREE','AHEAD','ALARM','ALBUM','ALERT','ALIEN','ALIGN','ALIKE','ALIVE',
+    'ALLEY','ALLOW','ALONE','ALONG','ALTER','AMAZE','AMBER','AMONG','AMPLE','ANGEL',
+    'ANGER','ANGLE','ANGRY','ANKLE','ANNOY','APART','APPLE','APPLY','ARENA','ARGUE',
+    'ARISE','ARMOR','AROMA','ARRAY','ARROW','ASIDE','ASSET','ATTIC','AUDIO','AUDIT',
+    'AVOID','AWAKE','AWARD','AWARE',
+    // B
+    'BADGE','BADLY','BAKER','BASIC','BASIN','BASIS','BATCH','BEACH','BEARS','BEAST',
+    'BEGAN','BEGIN','BEING','BELOW','BENCH','BERRY','BLACK','BLADE','BLAME','BLANK',
+    'BLAST','BLAZE','BLEED','BLEND','BLESS','BLIND','BLINK','BLISS','BLOCK','BLOOD',
+    'BLOOM','BLOWN','BLUES','BOARD','BOATS','BONES','BONUS','BOOKS','BOOST','BOOTH',
+    'BOUND','BRAIN','BRAND','BRASS','BRAVE','BREAD','BREAK','BREED','BRICK','BRIDE',
+    'BRIEF','BRING','BROAD','BROKE','BROOK','BROWN','BRUSH','BUILD','BUILT','BUNCH',
+    'BURST','BUYER',
+    // C
+    'CABIN','CABLE','CAMEL','CANDY','CARDS','CARGO','CARRY','CATCH','CAUSE','CEASE',
+    'CHAIN','CHAIR','CHALK','CHAMP','CHAOS','CHARM','CHART','CHASE','CHEAP','CHEAT',
+    'CHECK','CHEEK','CHEER','CHESS','CHEST','CHIEF','CHILD','CHILL','CHINA','CHOIR',
+    'CHOSE','CHUNK','CIVIC','CIVIL','CLAIM','CLASH','CLASS','CLEAN','CLEAR','CLERK',
+    'CLICK','CLIFF','CLIMB','CLING','CLOCK','CLONE','CLOSE','CLOTH','CLOUD','CLOWN',
+    'CLUBS','CLUES','COACH','COAST','CODES','COMET','COMIC','CORAL','COUNT','COUCH',
+    'COULD','COURT','COVER','CRACK','CRAFT','CRANE','CRASH','CRAZE','CRAZY','CREAM',
+    'CREEK','CREST','CRIME','CRISP','CROSS','CROWD','CROWN','CRUDE','CRUEL','CRUSH',
+    'CURVE','CYCLE',
+    // D
+    'DAILY','DAIRY','DANCE','DEATH','DEALT','DEBUG','DECAY','DEMON','DENSE','DEPTH',
+    'DERBY','DEVIL','DIARY','DIGIT','DIRTY','DODGE','DOUBT','DOUGH','DRAFT','DRAIN',
+    'DRAMA','DRANK','DRAWN','DREAM','DRESS','DRIED','DRIFT','DRILL','DRINK','DRIVE',
+    'DROPS','DROVE','DROWN','DRUNK','DWARF','DYING',
+    // E
+    'EAGER','EAGLE','EARLY','EARTH','EIGHT','ELBOW','ELDER','ELECT','ELITE','EMPTY',
+    'ENEMY','ENJOY','ENTER','EQUAL','EQUIP','ERROR','EVENT','EVERY','EXACT','EXAMS',
+    'EXIST','EXTRA',
+    // F
+    'FABLE','FAITH','FALSE','FANCY','FATAL','FAULT','FEAST','FENCE','FEWER','FIBER',
+    'FIELD','FIFTH','FIFTY','FIGHT','FINAL','FIRST','FIXED','FLAME','FLASH','FLESH',
+    'FLOAT','FLOOD','FLOOR','FLOUR','FLUID','FLUSH','FLUTE','FOCUS','FORCE','FORGE',
+    'FORTY','FORUM','FOUND','FRAME','FRANK','FRAUD','FRESH','FRONT','FROST','FROZE',
+    'FRUIT','FULLY','FUNDS','FUNNY','FUZZY',
+    // G
+    'GIANT','GIVEN','GLASS','GLEAM','GLOBE','GLOOM','GLORY','GLOSS','GLOVE','GOING',
+    'GRACE','GRADE','GRAIN','GRAND','GRANT','GRAPE','GRAPH','GRASP','GRASS','GRAVE',
+    'GRAVY','GREAT','GREED','GREEN','GREET','GRIEF','GRILL','GRIND','GROAN','GROSS',
+    'GROUP','GROVE','GROWN','GUARD','GUESS','GUEST','GUIDE','GUILT','GUISE','GUMMY',
+    // H
+    'HABIT','HANDS','HAPPY','HARDY','HARSH','HASTE','HAUNT','HAVEN','HEADS','HEARD',
+    'HEART','HEAVY','HELLO','HERBS','HERON','HINTS','HOBBY','HONEY','HONOR','HORSE',
+    'HOTEL','HOURS','HOUSE','HOVER','HUMAN','HUMOR','HURRY',
+    // I
+    'IDEAL','IMAGE','IMPLY','INDEX','INDIE','INNER','INPUT','IRONY','ISSUE','IVORY',
+    // J
+    'JEWEL','JOINT','JOKER','JOLLY','JUDGE','JUICE','JUICY','JUMBO',
+    // K
+    'KAYAK','KNACK','KNEEL','KNIFE','KNOCK','KNOWN',
+    // L
+    'LABEL','LABOR','LANCE','LARGE','LASER','LATER','LAUGH','LAYER','LEADS','LEARN',
+    'LEASE','LEAST','LEGAL','LEMON','LEVEL','LEVER','LIGHT','LIMIT','LINEN','LIVER',
+    'LLAMA','LOCAL','LODGE','LOGIC','LOOSE','LORRY','LOVER','LOWER','LOYAL','LUCKY',
+    'LUNAR','LUNCH','LYING',
+    // M
+    'MAGIC','MAJOR','MAKER','MANGA','MANOR','MAPLE','MARCH','MATCH','MAYOR','MEDIA',
+    'MELON','MERCY','MERGE','MERIT','MERRY','METAL','METER','MIGHT','MINER','MINOR',
+    'MINUS','MIRTH','MODEL','MONEY','MONTH','MORAL','MOTOR','MOUND','MOUNT','MOUSE',
+    'MOUTH','MOVED','MOVIE','MUDDY','MUSIC','MOOSE',
+    // N
+    'NAIVE','NAKED','NASTY','NAVAL','NERVE','NEVER','NEWLY','NEXUS','NIGHT','NOBLE',
+    'NOISE','NORTH','NOTED','NOVEL','NURSE',
+    // O
+    'OASIS','OCCUR','OCEAN','OFFER','OFTEN','OLIVE','ONSET','OPERA','ORBIT','ORDER',
+    'OTHER','OUGHT','OUTER','OWNER','OXIDE',
+    // P
+    'PAINT','PANEL','PANIC','PAPER','PARTY','PASTA','PATCH','PAUSE','PEACE','PEACH',
+    'PEARL','PENNY','PHASE','PHONE','PHOTO','PIANO','PIECE','PILOT','PINCH','PITCH',
+    'PIXEL','PIZZA','PLACE','PLAIN','PLANE','PLANT','PLATE','PLAZA','PLEAD','PLUCK',
+    'PLUMB','PLUME','PLUMP','POINT','POLAR','POUND','POWER','PRESS','PRICE','PRIDE',
+    'PRIME','PRINT','PRIOR','PRIZE','PROBE','PROOF','PROUD','PROVE','PROXY','PULSE',
+    'PUNCH','PUPIL','PURSE',
+    // Q
+    'QUACK','QUEEN','QUERY','QUEST','QUEUE','QUICK','QUIET','QUILT','QUIRK','QUITE',
+    'QUOTA','QUOTE',
+    // R
+    'RADAR','RADIO','RAISE','RALLY','RANCH','RANGE','RAPID','RATIO','REACH','REACT',
+    'READY','REALM','REBEL','REIGN','RELAX','RELAY','RENAL','RENEW','REPLY','RIDER',
+    'RIDGE','RIFLE','RIGHT','RIGID','RISEN','RISKY','RIVAL','RIVER','ROBIN','ROBOT',
+    'ROCKY','ROGER','ROUGE','ROUGH','ROUND','ROUTE','ROYAL','RUGBY','RULER','RURAL',
+    // S
+    'SADLY','SAINT','SALAD','SAUCE','SCALE','SCARE','SCARY','SCENE','SCENT','SCORE',
+    'SCOUT','SCRAP','SEIZE','SENSE','SERVE','SEVEN','SHADE','SHALL','SHAME','SHAPE',
+    'SHARE','SHARK','SHARP','SHAVE','SHEEP','SHEER','SHEET','SHELF','SHELL','SHIFT',
+    'SHINE','SHIRT','SHOCK','SHOOT','SHORE','SHORT','SHOUT','SHOWN','SIGHT','SILLY',
+    'SINCE','SIXTH','SIXTY','SKILL','SKULL','SLASH','SLATE','SLEEP','SLICE','SLIDE',
+    'SLOPE','SMART','SMELL','SMILE','SMOKE','SNAKE','SOLAR','SOLID','SOLVE','SORRY',
+    'SOUTH','SPACE','SPARE','SPARK','SPEAK','SPEED','SPELL','SPEND','SPENT','SPICE',
+    'SPIKE','SPINE','SPLIT','SPOKE','SPOON','SPORT','SPRAY','SQUAD','STAGE','STAIN',
+    'STAKE','STALE','STALK','STALL','STAMP','STAND','STARE','START','STATE','STEAK',
+    'STEAL','STEAM','STEEL','STEEP','STEER','STERN','STICK','STIFF','STILL','STOCK',
+    'STOLE','STONE','STOOD','STOOL','STORE','STORM','STORY','STOVE','STUCK','STUDY',
+    'STUFF','STUMP','STUNG','STYLE','SUGAR','SUITE','SUNNY','SUPER','SURGE','SWAMP',
+    'SWEAR','SWEAT','SWEEP','SWEET','SWEPT','SWIFT','SWING','SWORD','SWORE','SWORN',
+    // T
+    'TABLE','TASTE','TEACH','TEETH','TEMPO','TENSE','TENTH','TERMS','THEFT','THEME',
+    'THERE','THICK','THIEF','THING','THINK','THIRD','THORN','THOSE','THREE','THREW',
+    'THROW','THUMB','TIGER','TIGHT','TIMER','TIRED','TITLE','TODAY','TOKEN','TOTAL',
+    'TOUCH','TOUGH','TOWER','TOXIC','TRACE','TRACK','TRADE','TRAIL','TRAIN','TRAIT',
+    'TRASH','TREAT','TREND','TRIAL','TRIBE','TRICK','TRIED','TROOP','TRUCK','TRULY',
+    'TRUMP','TRUNK','TRUST','TRUTH','TUMOR','TUNER','TURNS','TWICE','TWIST',
+    // U
+    'ULTRA','UNCLE','UNDER','UNION','UNITE','UNITY','UNTIL','UPPER','UPSET','URBAN',
+    'USAGE','USUAL','UTTER',
+    // V
+    'VAGUE','VALID','VALUE','VALVE','VAULT','VIDEO','VIGOR','VINYL','VIRAL','VIRUS',
+    'VISIT','VITAL','VIVID','VOCAL','VODKA','VOICE','VOTER',
+    // W
+    'WAGES','WAGON','WAIST','WASTE','WATCH','WATER','WAVES','WEARY','WEAVE','WEDGE',
+    'WEIRD','WHALE','WHEAT','WHEEL','WHERE','WHICH','WHILE','WHITE','WHOLE','WHOSE',
+    'WIDER','WIDTH','WITCH','WOMAN','WOMEN','WOODS','WORLD','WORRY','WORSE','WORST',
+    'WORTH','WOULD','WOUND','WRATH','WRITE','WRONG','WROTE',
+    // Y
+    'YACHT','YIELD','YOUNG','YOUTH',
+    // Z
+    'ZEBRA','ZESTY'
 ];
 
-// Validate that all words are 5 letters
-const VALID_WORDS = WORD_LIST.filter(word => word.length === 5).map(w => w.toUpperCase());
+// Local cache for API-validated words (valid = true, invalid = false)
+const _wordCache = {};
+// Pre-populate cache with all answer words
+ANSWER_WORDS.forEach(w => { _wordCache[w] = true; });
 
-// Function to get word of the day based on date
+// Validate word via Free Dictionary API
+async function _checkDictionaryAPI(word) {
+    try {
+        const res = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`);
+        return res.ok;
+    } catch {
+        // Network error: accept the word to avoid blocking gameplay
+        return true;
+    }
+}
+
+// Async word validation: checks cache first, then API
+async function isValidWordAsync(word) {
+    const upper = word.toUpperCase();
+    if (upper.length !== 5) return false;
+
+    // Check cache
+    if (_wordCache[upper] !== undefined) {
+        return _wordCache[upper];
+    }
+
+    // Check API
+    const valid = await _checkDictionaryAPI(upper);
+    _wordCache[upper] = valid;
+    return valid;
+}
+
+// Sync fallback (for backward compatibility) - checks cache only
+function isValidWord(word) {
+    const upper = word.toUpperCase();
+    if (upper.length !== 5) return false;
+    // Cache hit
+    if (_wordCache[upper] !== undefined) return _wordCache[upper];
+    // Not in cache = unknown, accept optimistically (API will validate later)
+    return true;
+}
+
+// Get word of the day based on date
 function getWordOfTheDay() {
     const today = new Date();
     const startDate = new Date(2024, 0, 1);
-    const dayIndex = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) % VALID_WORDS.length;
-    return VALID_WORDS[dayIndex];
+    const dayIndex = Math.floor((today - startDate) / (1000 * 60 * 60 * 24)) % ANSWER_WORDS.length;
+    return ANSWER_WORDS[dayIndex];
 }
 
-// Function to get a random word for practice mode
+// Get a random word for practice mode
 function getRandomWord() {
-    return VALID_WORDS[Math.floor(Math.random() * VALID_WORDS.length)];
-}
-
-// Function to check if a word is valid
-function isValidWord(word) {
-    return VALID_WORDS.includes(word.toUpperCase());
+    return ANSWER_WORDS[Math.floor(Math.random() * ANSWER_WORDS.length)];
 }

@@ -12,7 +12,9 @@ let gameState = {
     gameOver: false,
     won: false,
     attempts: 6,
-    hints: 1,
+    hints: 3,
+    hintRevealed: [],
+    validating: false,
     hardMode: false,
     soundEnabled: true,
     animationsEnabled: true,
@@ -193,8 +195,8 @@ function handleBackspace() {
 /**
  * Handle enter/submit guess
  */
-function handleEnter() {
-    if (gameState.gameOver) return;
+async function handleEnter() {
+    if (gameState.gameOver || gameState.validating) return;
 
     const currentGuess = gameState.currentGuess;
 
@@ -205,7 +207,15 @@ function handleEnter() {
     }
 
     const word = currentGuess.join('');
-    if (!isValidWord(word)) {
+
+    // Async API validation
+    gameState.validating = true;
+    enterBtn.classList.add('loading');
+    const valid = await isValidWordAsync(word);
+    gameState.validating = false;
+    enterBtn.classList.remove('loading');
+
+    if (!valid) {
         showError(i18n.t('errors.wordNotInList'));
         return;
     }
@@ -537,7 +547,9 @@ function startNewGame(mode = 'daily') {
     gameState.currentGuess = [];
     gameState.gameOver = false;
     gameState.won = false;
-    gameState.hints = 1;
+    gameState.hints = 3;
+    gameState.hintRevealed = [];
+    gameState.validating = false;
 
     if (mode === 'daily') {
         gameState.currentWord = getWordOfTheDay();
@@ -640,31 +652,31 @@ function getDayNumber() {
 }
 
 /**
- * Use hint
+ * Use hint - reveals a random unrevealed letter
  */
 function useHint() {
     if (gameState.gameOver || gameState.hints <= 0) return;
 
-    if (gameState.guesses.length === 0 && gameState.currentGuess.length === 0) {
-        // First hint: reveal if word has common patterns
-        const vowels = ['A', 'E', 'I', 'O', 'U'];
-        const hasVowel = vowels.some(v => gameState.currentWord.includes(v));
-        hintText.innerHTML = hasVowel ?
-            `💡 ${i18n.t('hint.vowel')}` :
-            `💡 ${i18n.t('hint.noVowel')}`;
-    } else {
-        // Reveal one letter at current position
-        if (gameState.currentGuess.length < 5) {
-            const nextPos = gameState.currentGuess.length;
-            const hintLetter = gameState.currentWord[nextPos];
-            hintText.innerHTML = `💡 ${i18n.t('hint.letterAt')} ${nextPos + 1}: <strong>${hintLetter}</strong>`;
-            handleKeyPress(hintLetter);
-        }
-    }
+    // Find positions not yet revealed by hints
+    const revealedPositions = gameState.hintRevealed || [];
+    const unrevealed = [0, 1, 2, 3, 4].filter(i => !revealedPositions.includes(i));
+
+    if (unrevealed.length === 0) return;
+
+    // Pick a random unrevealed position
+    const pos = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+    const letter = gameState.currentWord[pos];
+
+    if (!gameState.hintRevealed) gameState.hintRevealed = [];
+    gameState.hintRevealed.push(pos);
+
+    hintText.innerHTML = `💡 ${i18n.t('hints.letterAt')} ${pos + 1}: <strong>${letter}</strong>`;
+    hintText.classList.remove('hidden');
 
     gameState.hints--;
-    hintText.classList.remove('hidden');
-    hintBtn.disabled = true;
+    if (gameState.hints <= 0) {
+        hintBtn.disabled = true;
+    }
 }
 
 /**
