@@ -782,10 +782,20 @@ function setupEventListeners() {
     });
 
     // Theme toggle
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-        document.body.classList.toggle('light-mode');
-        localStorage.setItem('wordguess-theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
-    });
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || (document.body.classList.contains('light-mode') ? 'light' : 'dark');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', next);
+            document.body.classList.toggle('light-mode', next === 'light');
+            localStorage.setItem('wordguess-theme', next);
+            const themeIcon = themeToggle.querySelector('.theme-icon');
+            if (themeIcon) {
+                themeIcon.textContent = next === 'light' ? '🌙' : '☀️';
+            }
+        });
+    }
 
     // Result modal
     document.getElementById('play-again-btn').addEventListener('click', () => {
@@ -815,15 +825,24 @@ function updateUIText() {
  * Initialize game
  */
 function init() {
+  try {
     // Load saved settings
     loadStats();
     gameState.hardMode = localStorage.getItem('wordguess-hardmode') === 'true';
     gameState.soundEnabled = localStorage.getItem('wordguess-sound') !== 'false';
     gameState.animationsEnabled = localStorage.getItem('wordguess-animations') !== 'false';
 
-    const theme = localStorage.getItem('wordguess-theme');
+    const theme = localStorage.getItem('wordguess-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
     if (theme === 'light') {
         document.body.classList.add('light-mode');
+    }
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        const themeIcon = themeToggle.querySelector('.theme-icon');
+        if (themeIcon) {
+            themeIcon.textContent = theme === 'light' ? '🌙' : '☀️';
+        }
     }
 
     // Update checkboxes
@@ -842,6 +861,15 @@ function init() {
 
     // Update UI text when language changes
     window.addEventListener('languagechange', updateUIText);
+  } catch(e) {
+    console.error('Init error:', e);
+  } finally {
+    const loader = document.getElementById('app-loader');
+    if (loader) {
+        loader.classList.add('hidden');
+        setTimeout(() => loader.remove(), 300);
+    }
+  }
 }
 
 // Start when document is ready
