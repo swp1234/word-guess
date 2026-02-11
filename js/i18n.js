@@ -184,7 +184,9 @@ const i18n = new I18n();
 
 // Initialize i18n when DOM is ready
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => i18n.init());
+    document.addEventListener('DOMContentLoaded', () => {
+        try { i18n.init(); } catch(e) { console.warn('i18n init error:', e); }
+    });
 } else {
-    i18n.init();
+    try { i18n.init(); } catch(e) { console.warn('i18n init error:', e); }
 }
