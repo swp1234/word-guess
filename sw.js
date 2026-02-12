@@ -3,7 +3,7 @@
  * Enables offline functionality and app installation
  */
 
-const CACHE_NAME = 'word-guess-v1';
+const CACHE_NAME = 'word-guess-v2';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
@@ -70,54 +70,29 @@ self.addEventListener('activate', (event) => {
 });
 
 /**
- * Fetch event - serve from cache, fall back to network
+ * Fetch event - network first, fallback to cache
  */
 self.addEventListener('fetch', (event) => {
-    // Skip non-GET requests
-    if (event.request.method !== 'GET') {
-        return;
-    }
+    if (event.request.method !== 'GET') return;
 
-    // Skip external requests
-    if (!event.request.url.includes(self.location.origin)) {
-        return;
-    }
+    // Skip external requests (ads, analytics, etc.)
+    if (!event.request.url.startsWith(self.location.origin)) return;
 
     event.respondWith(
-        caches.match(event.request).then((response) => {
-            if (response) {
-                // Serve from cache
-                return response;
-            }
-
-            // Try network
-            return fetch(event.request).then((response) => {
-                // Check if response is valid
-                if (!response || response.status !== 200 || response.type === 'error') {
-                    return response;
+        fetch(event.request)
+            .then((response) => {
+                if (response && response.status === 200) {
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
                 }
-
-                // Clone the response
-                const responseToCache = response.clone();
-
-                // Cache the response
-                caches.open(CACHE_NAME).then((cache) => {
-                    cache.put(event.request, responseToCache);
-                });
-
                 return response;
-            }).catch((err) => {
-                console.log('[SW] Fetch error:', err);
-                // Return offline page or error response
-                return new Response('Offline - please try again later', {
-                    status: 503,
-                    statusText: 'Service Unavailable',
-                    headers: new Headers({
-                        'Content-Type': 'text/plain'
-                    })
-                });
-            });
-        })
+            })
+            .catch(() => {
+                return caches.match(event.request)
+                    .then((cached) => cached || caches.match('./index.html'));
+            })
     );
 });
 
