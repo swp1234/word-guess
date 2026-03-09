@@ -326,7 +326,11 @@ function submitGuess(currentGuess) {
             playSound('correct');
             spawnConfetti();
             showFloatingStreak(gameState.stats.streak);
-            showResultModal(true);
+            if (typeof GameAds !== 'undefined') {
+                GameAds.showInterstitial({ onComplete: () => { showResultModal(true); } });
+            } else {
+                showResultModal(true);
+            }
         }, 600);
     } else if (gameState.guesses.length >= gameState.attempts) {
         gameState.gameOver = true;
@@ -336,7 +340,11 @@ function submitGuess(currentGuess) {
         setTimeout(() => {
             playSound('error');
             shakeBoard();
-            showResultModal(false);
+            if (typeof GameAds !== 'undefined') {
+                GameAds.showInterstitial({ onComplete: () => { showResultModal(false); } });
+            } else {
+                showResultModal(false);
+            }
         }, 600);
     } else {
         // Wrong guess but still has attempts — shake feedback
@@ -967,6 +975,9 @@ function init() {
     initializeKeyboard();
     setupEventListeners();
     setupKeyboardShortcuts();
+
+    // Initialize game ads
+    if (typeof GameAds !== 'undefined') GameAds.init();
 
     // Start game
     startNewGame('daily');
