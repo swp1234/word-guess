@@ -28,6 +28,51 @@ let gameState = {
     }
 };
 
+// Visual feedback helpers
+function shakeBoard() {
+    if (!tilesContainer) return;
+    tilesContainer.classList.add('shake');
+    setTimeout(() => tilesContainer.classList.remove('shake'), 400);
+}
+
+// Inject shake animation CSS
+(function() {
+    const s = document.createElement('style');
+    s.textContent = '@keyframes wg-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}.shake{animation:wg-shake .4s ease}';
+    document.head.appendChild(s);
+})();
+
+function spawnConfetti() {
+    const container = document.querySelector('.game-board') || document.body;
+    const colors = ['#6aaa64', '#c9b458', '#e67e22', '#3498db', '#e74c3c', '#2ecc71'];
+    for (let i = 0; i < 40; i++) {
+        const p = document.createElement('div');
+        p.style.cssText = `position:fixed;width:8px;height:8px;border-radius:50%;pointer-events:none;z-index:9999;background:${colors[i % colors.length]};left:${50 + (Math.random()-0.5)*40}%;top:40%;opacity:1;transition:none;`;
+        container.appendChild(p);
+        const tx = (Math.random() - 0.5) * 300;
+        const ty = -100 - Math.random() * 200;
+        requestAnimationFrame(() => {
+            p.style.transition = 'all 1s ease-out';
+            p.style.transform = `translate(${tx}px, ${ty}px) rotate(${Math.random()*360}deg)`;
+            p.style.opacity = '0';
+        });
+        setTimeout(() => p.remove(), 1200);
+    }
+}
+
+function showFloatingStreak(streak) {
+    if (streak < 2) return;
+    const el = document.createElement('div');
+    el.textContent = `${streak} STREAK!`;
+    el.style.cssText = 'position:fixed;top:30%;left:50%;transform:translateX(-50%);font-size:28px;font-weight:bold;color:#c9b458;z-index:9999;pointer-events:none;text-shadow:0 0 10px rgba(201,180,88,0.5);opacity:1;transition:all 1.2s ease-out;';
+    document.body.appendChild(el);
+    requestAnimationFrame(() => {
+        el.style.top = '20%';
+        el.style.opacity = '0';
+    });
+    setTimeout(() => el.remove(), 1400);
+}
+
 // DOM Elements
 const tilesContainer = document.getElementById('tiles-container');
 const virtualKeyboard = document.getElementById('virtual-keyboard');
@@ -217,6 +262,7 @@ async function handleEnter() {
 
     if (!valid) {
         showError(i18n.t('errors.wordNotInList'));
+        shakeBoard();
         return;
     }
 
@@ -275,6 +321,8 @@ function submitGuess(currentGuess) {
         updateStats(true);
         setTimeout(() => {
             playSound('correct');
+            spawnConfetti();
+            showFloatingStreak(gameState.stats.streak);
             showResultModal(true);
         }, 600);
     } else if (gameState.guesses.length >= gameState.attempts) {
@@ -283,8 +331,12 @@ function submitGuess(currentGuess) {
         updateStats(false);
         setTimeout(() => {
             playSound('error');
+            shakeBoard();
             showResultModal(false);
         }, 600);
+    } else {
+        // Wrong guess but still has attempts — shake feedback
+        setTimeout(() => shakeBoard(), 500);
     }
 
     updateKeyboardColors();
