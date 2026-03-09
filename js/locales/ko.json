@@ -33,6 +33,7 @@
     "played": "플레이",
     "wins": "승리",
     "streak": "연속",
+    "maxStreak": "최고",
     "winRate": "승률",
     "distribution": "시도 분포",
     "attempts": "시도"

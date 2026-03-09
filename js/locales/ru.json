@@ -33,6 +33,7 @@
     "played": "Сыграно",
     "wins": "Победы",
     "streak": "Серия",
+    "maxStreak": "Лучший",
     "winRate": "Процент побед",
     "distribution": "Распределение попыток",
     "attempts": "Попытки"

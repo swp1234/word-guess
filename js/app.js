@@ -276,8 +276,9 @@ async function handleEnter() {
     gameState.guesses.push([...currentGuess]);
     gameState.currentGuess = [];
 
-    // Submit guess
+    // Submit guess and save daily state
     submitGuess(gameState.guesses[gameState.guesses.length - 1]);
+    saveDailyState();
 }
 
 /**
@@ -489,6 +490,9 @@ function updateStats(won) {
     if (won) {
         gameState.stats.wins++;
         gameState.stats.streak++;
+        if (!gameState.stats.maxStreak || gameState.stats.streak > gameState.stats.maxStreak) {
+            gameState.stats.maxStreak = gameState.stats.streak;
+        }
         const attemptIndex = gameState.guesses.length - 1;
         gameState.stats.distribution[attemptIndex]++;
     } else {
@@ -497,8 +501,9 @@ function updateStats(won) {
     }
     gameState.stats.totalAttempts += gameState.guesses.length;
 
-    // Save stats to localStorage
+    // Save stats and daily state
     saveStats();
+    saveDailyState();
 }
 
 /**
@@ -514,8 +519,42 @@ function saveStats() {
 function loadStats() {
     const saved = localStorage.getItem('wordguess-stats');
     if (saved) {
-        gameState.stats = JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Ensure maxStreak exists for forward compatibility
+        if (typeof parsed.maxStreak === 'undefined') {
+            parsed.maxStreak = parsed.streak || 0;
+        }
+        gameState.stats = parsed;
     }
+}
+
+/**
+ * Save daily game state to localStorage (for restore on page reload)
+ */
+function saveDailyState() {
+    if (gameState.mode !== 'daily') return;
+    const state = {
+        dayNumber: getDayNumber(),
+        guesses: gameState.guesses,
+        currentGuess: gameState.currentGuess,
+        gameOver: gameState.gameOver,
+        won: gameState.won,
+        hints: gameState.hints,
+        hintRevealed: gameState.hintRevealed
+    };
+    localStorage.setItem('wordguess-daily-state', JSON.stringify(state));
+}
+
+/**
+ * Load daily game state from localStorage
+ * Returns null if no saved state or different day
+ */
+function loadDailyState() {
+    const saved = localStorage.getItem('wordguess-daily-state');
+    if (!saved) return null;
+    const state = JSON.parse(saved);
+    if (state.dayNumber !== getDayNumber()) return null;
+    return state;
 }
 
 /**
@@ -607,13 +646,24 @@ function startNewGame(mode = 'daily') {
         gameState.currentWord = getWordOfTheDay();
         dailyCounterDiv.classList.remove('hidden');
         updateDailyTimer();
+
+        // Restore saved daily state if available
+        const savedDaily = loadDailyState();
+        if (savedDaily) {
+            gameState.guesses = savedDaily.guesses || [];
+            gameState.currentGuess = savedDaily.currentGuess || [];
+            gameState.gameOver = savedDaily.gameOver || false;
+            gameState.won = savedDaily.won || false;
+            gameState.hints = typeof savedDaily.hints === 'number' ? savedDaily.hints : 3;
+            gameState.hintRevealed = savedDaily.hintRevealed || [];
+        }
     } else {
         gameState.currentWord = getRandomWord();
         dailyCounterDiv.classList.add('hidden');
     }
 
     hintText.classList.add('hidden');
-    hintBtn.disabled = false;
+    hintBtn.disabled = gameState.hints <= 0;
     resultModal.classList.add('hidden');
     errorMessage.classList.add('hidden');
 
@@ -621,6 +671,11 @@ function startNewGame(mode = 'daily') {
     initializeKeyboard();
     updateTiles();
     updateKeyboardColors();
+
+    // If daily was already completed, show result
+    if (mode === 'daily' && gameState.gameOver) {
+        setTimeout(() => showResultModal(gameState.won), 300);
+    }
 }
 
 /**
@@ -630,6 +685,8 @@ function showStatsModal() {
     document.getElementById('stat-played').textContent = gameState.stats.played;
     document.getElementById('stat-wins').textContent = gameState.stats.wins;
     document.getElementById('stat-streak').textContent = gameState.stats.streak;
+    const maxStreakEl = document.getElementById('stat-maxstreak');
+    if (maxStreakEl) maxStreakEl.textContent = gameState.stats.maxStreak || 0;
     const winRate = gameState.stats.played > 0 ? Math.round(gameState.stats.wins / gameState.stats.played * 100) : 0;
     document.getElementById('stat-winrate').textContent = winRate + '%';
 

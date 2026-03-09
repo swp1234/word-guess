@@ -33,6 +33,7 @@
     "played": "プレイ数",
     "wins": "勝利",
     "streak": "連勝",
+    "maxStreak": "最高",
     "winRate": "勝率",
     "distribution": "試行分布",
     "attempts": "試行"

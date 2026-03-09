@@ -33,6 +33,7 @@
     "played": "Played",
     "wins": "Wins",
     "streak": "Streak",
+    "maxStreak": "Best",
     "winRate": "Win Rate",
     "distribution": "Guess Distribution",
     "attempts": "Attempts"

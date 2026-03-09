@@ -33,6 +33,7 @@
     "played": "Oynanılan",
     "wins": "Kazanışlar",
     "streak": "Seri",
+    "maxStreak": "En İyi",
     "winRate": "Kazanma Oranı",
     "distribution": "Deneme Dağılımı",
     "attempts": "Denemeler"

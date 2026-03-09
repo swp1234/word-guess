@@ -33,6 +33,7 @@
     "played": "已玩",
     "wins": "胜利",
     "streak": "连胜",
+    "maxStreak": "最佳",
     "winRate": "胜率",
     "distribution": "尝试分布",
     "attempts": "尝试"

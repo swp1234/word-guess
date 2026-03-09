@@ -33,6 +33,7 @@
     "played": "Joué",
     "wins": "Victoires",
     "streak": "Série",
+    "maxStreak": "Meilleur",
     "winRate": "Taux de Victoire",
     "distribution": "Distribution des Tentatives",
     "attempts": "Tentatives"
