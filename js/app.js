@@ -611,6 +611,18 @@ function showResultModal(won) {
     `;
 
     resultModal.classList.remove('hidden');
+
+    // Inject rewarded ad button for bonus hint
+    if (typeof GameAds !== 'undefined') {
+        GameAds.injectRewardButton({
+            container: '#result-modal .modal-content',
+            label: '📺 Watch Ad for +3 Hints',
+            onReward: () => {
+                gameState.hints += 3;
+                hintBtn.disabled = false;
+            }
+        });
+    }
 }
 
 /**
@@ -676,6 +688,7 @@ function startNewGame(mode = 'daily') {
     hintText.classList.add('hidden');
     hintBtn.disabled = gameState.hints <= 0;
     resultModal.classList.add('hidden');
+    if (typeof GameAds !== 'undefined') GameAds.removeRewardButton('#result-modal .modal-content');
     errorMessage.classList.add('hidden');
 
     initializeTiles();
