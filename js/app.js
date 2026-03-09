@@ -263,6 +263,7 @@ async function handleEnter() {
     if (!valid) {
         showError(i18n.t('errors.wordNotInList'));
         shakeBoard();
+        if (typeof Haptic !== 'undefined') Haptic.medium();
         return;
     }
 
@@ -320,6 +321,7 @@ function submitGuess(currentGuess) {
         gameState.gameOver = true;
         gameState.won = true;
         updateStats(true);
+        if (typeof Haptic !== 'undefined') Haptic.success();
         setTimeout(() => {
             playSound('correct');
             spawnConfetti();
@@ -330,6 +332,7 @@ function submitGuess(currentGuess) {
         gameState.gameOver = true;
         gameState.won = false;
         updateStats(false);
+        if (typeof Haptic !== 'undefined') Haptic.heavy();
         setTimeout(() => {
             playSound('error');
             shakeBoard();
