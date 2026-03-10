@@ -341,6 +341,7 @@ function submitGuess(currentGuess) {
         gameState.won = true;
         updateStats(true);
         if (typeof Haptic !== 'undefined') Haptic.success();
+        if (typeof DailyStreak !== 'undefined') DailyStreak.report(gameState.stats.wins);
         if (typeof GameAchievements !== 'undefined') GameAchievements.report({
             totalWins: gameState.stats.wins,
             totalGames: gameState.stats.played,
@@ -1022,6 +1023,9 @@ function init() {
     initializeKeyboard();
     setupEventListeners();
     setupKeyboardShortcuts();
+
+    // Initialize daily streak
+    if (typeof DailyStreak !== 'undefined') DailyStreak.init({ gameId: 'word-guess', bestScoreKey: 'wordguess_totalWins', minTarget: 1, unit: 'wins' });
 
     // Initialize game ads
     if (typeof GameAds !== 'undefined') GameAds.init();
