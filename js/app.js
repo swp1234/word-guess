@@ -341,6 +341,11 @@ function submitGuess(currentGuess) {
         gameState.won = true;
         updateStats(true);
         if (typeof Haptic !== 'undefined') Haptic.success();
+        if (typeof GameAchievements !== 'undefined') GameAchievements.report({
+            totalWins: gameState.stats.wins,
+            totalGames: gameState.stats.played,
+            bestStreak: gameState.stats.maxStreak || 0
+        });
         setTimeout(() => {
             playSound('correct');
             spawnConfetti();
@@ -356,6 +361,11 @@ function submitGuess(currentGuess) {
         gameState.won = false;
         updateStats(false);
         if (typeof Haptic !== 'undefined') Haptic.heavy();
+        if (typeof GameAchievements !== 'undefined') GameAchievements.report({
+            totalWins: gameState.stats.wins,
+            totalGames: gameState.stats.played,
+            bestStreak: gameState.stats.maxStreak || 0
+        });
         setTimeout(() => {
             playSound('error');
             shakeBoard();
@@ -1015,6 +1025,19 @@ function init() {
 
     // Initialize game ads
     if (typeof GameAds !== 'undefined') GameAds.init();
+
+    // Initialize game achievements
+    if (typeof GameAchievements !== 'undefined') GameAchievements.init({
+        gameId: 'word-guess',
+        defs: [
+            { id: 'wins_5', stat: 'totalWins', target: 5, icon: '⭐', name: 'Word Guesser' },
+            { id: 'wins_20', stat: 'totalWins', target: 20, icon: '🏆', name: 'Word Master' },
+            { id: 'wins_50', stat: 'totalWins', target: 50, icon: '👑', name: 'Word Legend' },
+            { id: 'games_10', stat: 'totalGames', target: 10, icon: '🎮', name: 'Regular Player' },
+            { id: 'streak_3', stat: 'bestStreak', target: 3, icon: '🔥', name: 'Hot Streak' },
+            { id: 'streak_7', stat: 'bestStreak', target: 7, icon: '💥', name: 'Unstoppable' }
+        ]
+    });
 
     // Start game
     startNewGame('daily');
