@@ -339,6 +339,12 @@ function submitGuess(currentGuess) {
     if (isCorrect) {
         gameState.gameOver = true;
         gameState.won = true;
+        // Score: fewer guesses = more points + streak bonus
+        const attemptScore = (gameState.attempts - gameState.guesses.length + 1) * 100;
+        const streakBonus = Math.min(gameState.stats.streak, 10) * 20;
+        const hintPenalty = (3 - gameState.hints) * 30;
+        gameState.roundScore = Math.max(0, attemptScore + streakBonus - hintPenalty);
+        gameState.stats.totalScore = (gameState.stats.totalScore || 0) + gameState.roundScore;
         updateStats(true);
         if (typeof Haptic !== 'undefined') Haptic.success();
         if (typeof DailyStreak !== 'undefined') DailyStreak.report(gameState.stats.wins);
@@ -629,7 +635,14 @@ function showResultModal(won) {
         resultMessage.innerHTML += `<br><small>${i18n.t('result.nextDaily')}: ${timeUntil}</small>`;
     }
 
+    const scoreHtml = won && gameState.roundScore ? `
+        <div class="result-stat">
+            <span class="result-stat-label">Score</span>
+            <span class="result-stat-value" style="color:var(--color-correct);font-weight:700">+${gameState.roundScore}</span>
+        </div>` : '';
+
     resultStats.innerHTML = `
+        ${scoreHtml}
         <div class="result-stat">
             <span class="result-stat-label">${i18n.t('stats.attempts')}</span>
             <span class="result-stat-value">${gameState.guesses.length}/${gameState.attempts}</span>
@@ -641,6 +654,10 @@ function showResultModal(won) {
         <div class="result-stat">
             <span class="result-stat-label">${i18n.t('stats.winRate')}</span>
             <span class="result-stat-value">${gameState.stats.played > 0 ? Math.round(gameState.stats.wins / gameState.stats.played * 100) : 0}%</span>
+        </div>
+        <div class="result-stat">
+            <span class="result-stat-label">Total Score</span>
+            <span class="result-stat-value">${gameState.stats.totalScore || 0}</span>
         </div>
     `;
 
@@ -746,6 +763,8 @@ function showStatsModal() {
     document.getElementById('stat-streak').textContent = gameState.stats.streak;
     const maxStreakEl = document.getElementById('stat-maxstreak');
     if (maxStreakEl) maxStreakEl.textContent = gameState.stats.maxStreak || 0;
+    const totalScoreEl = document.getElementById('stat-totalscore');
+    if (totalScoreEl) totalScoreEl.textContent = gameState.stats.totalScore || 0;
     const winRate = gameState.stats.played > 0 ? Math.round(gameState.stats.wins / gameState.stats.played * 100) : 0;
     document.getElementById('stat-winrate').textContent = winRate + '%';
 

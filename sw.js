@@ -3,7 +3,7 @@
  * Enables offline functionality and app installation
  */
 
-const CACHE_NAME = 'word-guess-v4';
+const CACHE_NAME = 'word-guess-v5';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
