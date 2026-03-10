@@ -82,6 +82,7 @@ body.light-mode,
     --color-text: #1a1a2e;
     --color-text-secondary: #5a5a70;
     --color-border: #d0d0d8;
+    --text: #1a1a2e;
 }
 
 [data-theme="light"] body {
