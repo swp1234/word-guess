@@ -56,6 +56,12 @@
     "noVowel": "Dieses Wort hat keine Vokale",
     "letterAt": "Position"
   },
+  "difficulty": {
+    "easy": "Leicht",
+    "normal": "Normal",
+    "hard": "Schwer",
+    "expert": "Experte"
+  },
   "about": {
     "title": "Über Word Guess",
     "description": "Word Guess ist ein tägliches Wortratespiel, inspiriert von Wordle. Erraten Sie das 5-buchstabige Wort in 6 Versuchen.",

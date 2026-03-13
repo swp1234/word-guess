@@ -56,6 +56,12 @@
     "noVowel": "Ce mot ne contient pas de voyelles",
     "letterAt": "Position"
   },
+  "difficulty": {
+    "easy": "Facile",
+    "normal": "Normal",
+    "hard": "Difficile",
+    "expert": "Expert"
+  },
   "about": {
     "title": "À Propos de Word Guess",
     "description": "Word Guess est un jeu quotidien de devinette de mots inspiré par Wordle. Devinez le mot de 5 lettres en 6 tentatives.",

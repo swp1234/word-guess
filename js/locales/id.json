@@ -56,6 +56,12 @@
     "noVowel": "Kata ini tidak memiliki huruf vokal",
     "letterAt": "Posisi"
   },
+  "difficulty": {
+    "easy": "Mudah",
+    "normal": "Normal",
+    "hard": "Sulit",
+    "expert": "Ahli"
+  },
   "about": {
     "title": "Tentang Word Guess",
     "description": "Word Guess adalah permainan teka-teki kata harian yang terinspirasi oleh Wordle. Tebak kata 5 huruf dalam 6 percobaan.",

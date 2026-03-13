@@ -56,6 +56,12 @@
     "noVowel": "Bu kelimede ünlü yoktur",
     "letterAt": "Konum"
   },
+  "difficulty": {
+    "easy": "Kolay",
+    "normal": "Normal",
+    "hard": "Zor",
+    "expert": "Uzman"
+  },
   "about": {
     "title": "Word Guess Hakkında",
     "description": "Word Guess, Wordle'den esinlenen günlük bir kelime tahmin oyunudur. 6 denemede 5 harfli kelimeyi tahmin et.",

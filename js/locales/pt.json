@@ -56,6 +56,12 @@
     "noVowel": "Esta palavra não tem vogais",
     "letterAt": "Posição"
   },
+  "difficulty": {
+    "easy": "Fácil",
+    "normal": "Normal",
+    "hard": "Difícil",
+    "expert": "Especialista"
+  },
   "about": {
     "title": "Sobre Word Guess",
     "description": "Word Guess é um jogo diário de adivinhação de palavras inspirado em Wordle. Adivinhe a palavra de 5 letras em 6 tentativas.",

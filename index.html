@@ -235,8 +235,17 @@
             <button id="practice-mode-btn" class="mode-btn" data-i18n="game.practice">Practice</button>
         </div>
 
+        <!-- Difficulty Selector -->
+        <div class="difficulty-selector">
+            <button class="diff-btn diff-easy" data-difficulty="easy" data-i18n="difficulty.easy">Easy</button>
+            <button class="diff-btn diff-normal active" data-difficulty="normal" data-i18n="difficulty.normal">Normal</button>
+            <button class="diff-btn diff-hard" data-difficulty="hard" data-i18n="difficulty.hard">Hard</button>
+            <button class="diff-btn diff-expert" data-difficulty="expert" data-i18n="difficulty.expert">Expert</button>
+        </div>
+
         <!-- Game Info -->
         <div class="game-info">
+            <span id="difficulty-badge" class="difficulty-badge difficulty-normal" data-i18n="difficulty.normal">Normal</span>
             <div id="daily-counter" class="daily-counter hidden">
                 <span data-i18n="game.word">Word</span>: <span id="daily-number">1</span>/365
                 <span id="timer" class="timer"></span>

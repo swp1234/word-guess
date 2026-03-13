@@ -56,6 +56,12 @@
     "noVowel": "この単語に母音はありません",
     "letterAt": "位置"
   },
+  "difficulty": {
+    "easy": "イージー",
+    "normal": "ノーマル",
+    "hard": "ハード",
+    "expert": "エキスパート"
+  },
   "about": {
     "title": "Word Guessについて",
     "description": "Word GuessはWordleに影響を受けた日替わり単語ゲームです。6回の試行で5文字の単語を当ててください。",

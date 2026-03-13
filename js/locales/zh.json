@@ -56,6 +56,12 @@
     "noVowel": "这个单词没有元音",
     "letterAt": "位置"
   },
+  "difficulty": {
+    "easy": "简单",
+    "normal": "普通",
+    "hard": "困难",
+    "expert": "专家"
+  },
   "about": {
     "title": "关于Word Guess",
     "description": "Word Guess是受Wordle启发的每日单词猜测游戏。在6次尝试中猜测5个字母的单词。",

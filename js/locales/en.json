@@ -56,6 +56,12 @@
     "noVowel": "This word has no vowels",
     "letterAt": "Position"
   },
+  "difficulty": {
+    "easy": "Easy",
+    "normal": "Normal",
+    "hard": "Hard",
+    "expert": "Expert"
+  },
   "about": {
     "title": "About Word Guess",
     "description": "Word Guess is a daily word puzzle game inspired by Wordle. Guess the 5-letter word in 6 attempts and improve your vocabulary.",

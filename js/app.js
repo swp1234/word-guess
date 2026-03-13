@@ -6,7 +6,9 @@
 // Game state
 let gameState = {
     mode: 'daily', // 'daily' or 'practice'
+    difficulty: 'normal', // 'easy', 'normal', 'hard', 'expert'
     currentWord: '',
+    wordLength: 5,
     guesses: [],       // Completed/submitted guesses only
     currentGuess: [],  // Letters being typed for current row
     gameOver: false,
@@ -23,7 +25,7 @@ let gameState = {
         wins: 0,
         losses: 0,
         streak: 0,
-        distribution: [0, 0, 0, 0, 0, 0], // Distribution by attempts
+        distribution: [0, 0, 0, 0, 0, 0, 0, 0], // Distribution by attempts (up to 8)
         totalAttempts: 0
     }
 };
@@ -189,11 +191,13 @@ function playSound(type = 'pop') {
 }
 
 /**
- * Initialize game board with tiles
+ * Initialize game board with tiles (dynamic rows x cols)
  */
 function initializeTiles() {
     tilesContainer.innerHTML = '';
-    for (let i = 0; i < 30; i++) { // 6 rows × 5 columns
+    const totalTiles = gameState.attempts * gameState.wordLength;
+    tilesContainer.style.gridTemplateColumns = `repeat(${gameState.wordLength}, 1fr)`;
+    for (let i = 0; i < totalTiles; i++) {
         const tile = document.createElement('div');
         tile.className = 'tile';
         tile.id = `tile-${i}`;
@@ -238,7 +242,7 @@ function handleKeyPress(letter) {
     initAudioContext();
     playSound('pop');
 
-    if (gameState.currentGuess.length < 5) {
+    if (gameState.currentGuess.length < gameState.wordLength) {
         gameState.currentGuess.push(letter.toUpperCase());
         updateTiles();
     }
@@ -265,8 +269,8 @@ async function handleEnter() {
     const currentGuess = gameState.currentGuess;
 
     // Validation
-    if (!currentGuess || currentGuess.length !== 5) {
-        showError(i18n.t('errors.wordTooShort'));
+    if (!currentGuess || currentGuess.length !== gameState.wordLength) {
+        showError(i18n.t('errors.wordTooShort').replace('5', gameState.wordLength));
         return;
     }
 
@@ -309,7 +313,7 @@ function validateHardMode(currentGuess) {
 
     for (const guess of gameState.guesses) {
         const guessWord = guess.join('');
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < gameState.wordLength; i++) {
             if (guessWord[i] === gameState.currentWord[i] && word[i] !== guessWord[i]) {
                 return false; // Must use correct letters in correct positions
             }
@@ -394,7 +398,7 @@ function submitGuess(currentGuess) {
  * Animate tile flips and apply feedback
  */
 function animateTileFlips(currentGuess, isCorrect) {
-    const startIndex = (gameState.guesses.length - 1) * 5;
+    const startIndex = (gameState.guesses.length - 1) * gameState.wordLength;
     const feedback = evaluateGuess(currentGuess);
 
     currentGuess.forEach((letter, i) => {
@@ -424,10 +428,11 @@ function evaluateGuess(guess) {
     const feedback = [];
     const answerLetters = gameState.currentWord.split('');
     const guessLetters = guess.join('').split('');
-    const used = new Array(5).fill(false);
+    const wLen = gameState.wordLength;
+    const used = new Array(wLen).fill(false);
 
     // First pass: mark correct letters
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < wLen; i++) {
         if (guessLetters[i] === answerLetters[i]) {
             feedback[i] = 'correct';
             used[i] = true;
@@ -435,11 +440,11 @@ function evaluateGuess(guess) {
     }
 
     // Second pass: mark present letters
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < wLen; i++) {
         if (feedback[i]) continue;
 
         let found = false;
-        for (let j = 0; j < 5; j++) {
+        for (let j = 0; j < wLen; j++) {
             if (!used[j] && guessLetters[i] === answerLetters[j]) {
                 feedback[i] = 'present';
                 used[j] = true;
@@ -470,7 +475,7 @@ function updateTiles() {
     gameState.guesses.forEach((guess, guessIndex) => {
         const feedback = evaluateGuess(guess);
         guess.forEach((letter, letterIndex) => {
-            const tileIndex = guessIndex * 5 + letterIndex;
+            const tileIndex = guessIndex * gameState.wordLength + letterIndex;
             const tile = document.getElementById(`tile-${tileIndex}`);
             tile.textContent = letter;
             tile.classList.add('filled');
@@ -482,7 +487,7 @@ function updateTiles() {
     const currentRowIndex = gameState.guesses.length;
     if (currentRowIndex < gameState.attempts) {
         gameState.currentGuess.forEach((letter, letterIndex) => {
-            const tileIndex = currentRowIndex * 5 + letterIndex;
+            const tileIndex = currentRowIndex * gameState.wordLength + letterIndex;
             const tile = document.getElementById(`tile-${tileIndex}`);
             tile.textContent = letter;
             tile.classList.add('filled', 'active');
@@ -545,6 +550,10 @@ function updateStats(won) {
             }
         }
         const attemptIndex = gameState.guesses.length - 1;
+        // Extend distribution array if needed
+        while (gameState.stats.distribution.length <= attemptIndex) {
+            gameState.stats.distribution.push(0);
+        }
         gameState.stats.distribution[attemptIndex]++;
     } else {
         gameState.stats.losses++;
@@ -586,6 +595,8 @@ function saveDailyState() {
     if (gameState.mode !== 'daily') return;
     const state = {
         dayNumber: getDayNumber(),
+        difficulty: gameState.difficulty,
+        word: gameState.currentWord,
         guesses: gameState.guesses,
         currentGuess: gameState.currentGuess,
         gameOver: gameState.gameOver,
@@ -717,25 +728,37 @@ function startNewGame(mode = 'daily') {
     gameState.validating = false;
     _newBestShown = false;
 
+    // Apply difficulty tier settings
+    const tier = DIFFICULTY_TIERS[gameState.difficulty] || DIFFICULTY_TIERS.normal;
+    gameState.attempts = tier.maxGuesses;
+
     if (mode === 'daily') {
-        gameState.currentWord = getWordOfTheDay();
+        gameState.currentWord = getWordOfTheDay(gameState.difficulty);
         dailyCounterDiv.classList.remove('hidden');
         updateDailyTimer();
 
         // Restore saved daily state if available
         const savedDaily = loadDailyState();
-        if (savedDaily) {
+        if (savedDaily && savedDaily.difficulty === gameState.difficulty) {
             gameState.guesses = savedDaily.guesses || [];
             gameState.currentGuess = savedDaily.currentGuess || [];
             gameState.gameOver = savedDaily.gameOver || false;
             gameState.won = savedDaily.won || false;
             gameState.hints = typeof savedDaily.hints === 'number' ? savedDaily.hints : 3;
             gameState.hintRevealed = savedDaily.hintRevealed || [];
+            gameState.currentWord = savedDaily.word || gameState.currentWord;
         }
     } else {
-        gameState.currentWord = getRandomWord();
+        gameState.currentWord = getRandomWord(gameState.difficulty);
         dailyCounterDiv.classList.add('hidden');
     }
+
+    // Set dynamic word length from selected word
+    gameState.wordLength = gameState.currentWord.length;
+    _expectedWordLength = gameState.wordLength;
+
+    // Update difficulty HUD badge
+    updateDifficultyHUD();
 
     hintText.classList.add('hidden');
     hintBtn.disabled = gameState.hints <= 0;
@@ -752,6 +775,38 @@ function startNewGame(mode = 'daily') {
     if (mode === 'daily' && gameState.gameOver) {
         setTimeout(() => showResultModal(gameState.won), 300);
     }
+}
+
+/**
+ * Update difficulty HUD badge text
+ */
+function updateDifficultyHUD() {
+    const badge = document.getElementById('difficulty-badge');
+    if (!badge) return;
+    const labels = {
+        easy: i18n.t('difficulty.easy', 'Easy'),
+        normal: i18n.t('difficulty.normal', 'Normal'),
+        hard: i18n.t('difficulty.hard', 'Hard'),
+        expert: i18n.t('difficulty.expert', 'Expert')
+    };
+    badge.textContent = labels[gameState.difficulty] || labels.normal;
+    badge.className = 'difficulty-badge difficulty-' + gameState.difficulty;
+}
+
+/**
+ * Set difficulty and restart game
+ */
+function setDifficulty(diff) {
+    if (gameState.difficulty === diff) return;
+    gameState.difficulty = diff;
+    localStorage.setItem('wordguess-difficulty', diff);
+
+    // Update selector UI
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.difficulty === diff);
+    });
+
+    startNewGame(gameState.mode);
 }
 
 /**
@@ -773,8 +828,9 @@ function showStatsModal() {
     const chartDiv = document.getElementById('distribution-chart');
     chartDiv.innerHTML = '';
 
-    for (let i = 0; i < 6; i++) {
-        const count = gameState.stats.distribution[i];
+    const distLen = Math.max(gameState.stats.distribution.length, gameState.attempts);
+    for (let i = 0; i < distLen; i++) {
+        const count = gameState.stats.distribution[i] || 0;
         const percentage = (count / maxCount) * 100;
 
         const row = document.createElement('div');
@@ -797,7 +853,8 @@ function showStatsModal() {
  */
 function shareResult() {
     const emojiGrid = generateEmojiGrid();
-    const text = `Word Guess #${getDayNumber()}\n${gameState.guesses.length}/${gameState.attempts}\n\n${emojiGrid}`;
+    const diffLabel = (DIFFICULTY_TIERS[gameState.difficulty] || DIFFICULTY_TIERS.normal).label;
+    const text = `Word Guess #${getDayNumber()} [${diffLabel}]\n${gameState.guesses.length}/${gameState.attempts}\n\n${emojiGrid}`;
 
     if (navigator.share) {
         navigator.share({
@@ -846,7 +903,8 @@ function useHint() {
 
     // Find positions not yet revealed by hints
     const revealedPositions = gameState.hintRevealed || [];
-    const unrevealed = [0, 1, 2, 3, 4].filter(i => !revealedPositions.includes(i));
+    const allPositions = Array.from({ length: gameState.wordLength }, (_, i) => i);
+    const unrevealed = allPositions.filter(i => !revealedPositions.includes(i));
 
     if (unrevealed.length === 0) return;
 
@@ -1018,6 +1076,18 @@ function init() {
     gameState.hardMode = localStorage.getItem('wordguess-hardmode') === 'true';
     gameState.soundEnabled = localStorage.getItem('wordguess-sound') !== 'false';
     gameState.animationsEnabled = localStorage.getItem('wordguess-animations') !== 'false';
+
+    // Load saved difficulty
+    const savedDiff = localStorage.getItem('wordguess-difficulty');
+    if (savedDiff && DIFFICULTY_TIERS[savedDiff]) {
+        gameState.difficulty = savedDiff;
+    }
+
+    // Setup difficulty selector buttons
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.difficulty === gameState.difficulty);
+        btn.addEventListener('click', () => setDifficulty(btn.dataset.difficulty));
+    });
 
     const theme = localStorage.getItem('wordguess-theme') || 'dark';
     document.documentElement.setAttribute('data-theme', theme);

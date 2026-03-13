@@ -56,6 +56,12 @@
     "noVowel": "이 단어에 모음이 없습니다",
     "letterAt": "위치"
   },
+  "difficulty": {
+    "easy": "쉬움",
+    "normal": "보통",
+    "hard": "어려움",
+    "expert": "전문가"
+  },
   "about": {
     "title": "Word Guess 정보",
     "description": "Word Guess는 Wordle에서 영감을 받은 일일 단어 맞추기 게임입니다. 6번의 시도로 5글자 단어를 맞춰 어휘력을 향상하세요.",
