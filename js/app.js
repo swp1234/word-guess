@@ -360,6 +360,16 @@ function submitGuess(currentGuess) {
         setTimeout(() => {
             playSound('correct');
             spawnConfetti();
+            // Perfect game — first attempt!
+            if (gameState.guesses.length === 1) {
+                const perfectEl = document.createElement('div');
+                perfectEl.textContent = '🎯 PERFECT!';
+                perfectEl.style.cssText = 'position:fixed;top:35%;left:50%;transform:translate(-50%,-50%) scale(0);font-size:36px;font-weight:900;color:#6aaa64;text-shadow:0 0 20px rgba(106,170,100,0.6);pointer-events:none;z-index:9999;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),opacity 0.5s;opacity:0;';
+                document.body.appendChild(perfectEl);
+                requestAnimationFrame(() => { perfectEl.style.transform = 'translate(-50%,-50%) scale(1.3)'; perfectEl.style.opacity = '1'; });
+                setTimeout(() => { perfectEl.style.opacity = '0'; perfectEl.style.transform = 'translate(-50%,-50%) scale(0.8)'; }, 1500);
+                setTimeout(() => perfectEl.remove(), 2200);
+            }
             showFloatingStreak(gameState.stats.streak);
             if (typeof GameAds !== 'undefined') {
                 GameAds.showInterstitial({ onComplete: () => { showResultModal(true); } });
@@ -646,6 +656,24 @@ function showResultModal(won) {
         resultMessage.innerHTML += `<br><small>${i18n.t('result.nextDaily')}: ${timeUntil}</small>`;
     }
 
+    // First-guess accuracy rating
+    let firstGuessRating = '';
+    if (gameState.guesses.length > 0) {
+        const firstGuess = gameState.guesses[0];
+        let correctLetters = 0;
+        for (let i = 0; i < firstGuess.length; i++) {
+            if (firstGuess[i] === gameState.currentWord[i]) correctLetters++;
+            else if (gameState.currentWord.includes(firstGuess[i])) correctLetters += 0.5;
+        }
+        const accuracy = Math.round((correctLetters / gameState.wordLength) * 100);
+        const ratingEmoji = accuracy >= 80 ? '🎯' : accuracy >= 50 ? '👍' : accuracy >= 20 ? '🤔' : '🎲';
+        firstGuessRating = `
+        <div class="result-stat">
+            <span class="result-stat-label">${ratingEmoji} First Guess</span>
+            <span class="result-stat-value">${accuracy}%</span>
+        </div>`;
+    }
+
     const scoreHtml = won && gameState.roundScore ? `
         <div class="result-stat">
             <span class="result-stat-label">Score</span>
@@ -658,6 +686,7 @@ function showResultModal(won) {
             <span class="result-stat-label">${i18n.t('stats.attempts')}</span>
             <span class="result-stat-value">${gameState.guesses.length}/${gameState.attempts}</span>
         </div>
+        ${firstGuessRating}
         <div class="result-stat">
             <span class="result-stat-label">${i18n.t('stats.streak')}</span>
             <span class="result-stat-value">${gameState.stats.streak}</span>
