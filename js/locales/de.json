@@ -72,5 +72,12 @@
     "rule4": "Grün: richtige Position",
     "rule5": "Gelb: richtiger Buchstabe, falsche Position",
     "rule6": "Grau: Buchstabe nicht im Wort"
+  },
+  "related": {
+    "title": "Mehr entdecken",
+    "wordScramble": "Wörter-Rätsel",
+    "quizApp": "Quiz-App",
+    "devQuiz": "Entwickler-Quiz",
+    "typingSpeed": "Tippgeschwindigkeit"
   }
 }

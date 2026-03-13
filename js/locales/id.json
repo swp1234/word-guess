@@ -72,5 +72,12 @@
     "rule4": "Hijau: posisi benar",
     "rule5": "Kuning: huruf benar, posisi salah",
     "rule6": "Abu-abu: huruf tidak ada dalam kata"
+  },
+  "related": {
+    "title": "Jelajahi lebih lanjut",
+    "wordScramble": "Acak Kata",
+    "quizApp": "Aplikasi Kuis",
+    "devQuiz": "Kuis Developer",
+    "typingSpeed": "Kecepatan Mengetik"
   }
 }

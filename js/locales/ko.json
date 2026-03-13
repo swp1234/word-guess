@@ -72,5 +72,12 @@
     "rule4": "초록색: 정확한 위치",
     "rule5": "노란색: 단어에 포함되지만 위치가 틀림",
     "rule6": "회색: 단어에 없음"
+  },
+  "related": {
+    "title": "더 많은 콘텐츠",
+    "wordScramble": "단어 스크램블",
+    "quizApp": "퀴즈 앱",
+    "devQuiz": "개발자 퀴즈",
+    "typingSpeed": "타이핑 속도"
   }
 }

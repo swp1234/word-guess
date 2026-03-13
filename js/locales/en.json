@@ -72,5 +72,12 @@
     "rule4": "Green: correct position",
     "rule5": "Yellow: correct letter, wrong position",
     "rule6": "Gray: letter not in word"
+  },
+  "related": {
+    "title": "More to Explore",
+    "wordScramble": "Word Scramble",
+    "quizApp": "Quiz App",
+    "devQuiz": "Dev Quiz",
+    "typingSpeed": "Typing Speed"
   }
 }

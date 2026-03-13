@@ -72,5 +72,12 @@
     "rule4": "绿色：正确位置",
     "rule5": "黄色：单词中的字母，位置错误",
     "rule6": "灰色：单词中没有的字母"
+  },
+  "related": {
+    "title": "更多探索",
+    "wordScramble": "单词拼写",
+    "quizApp": "问答应用",
+    "devQuiz": "开发者测验",
+    "typingSpeed": "打字速度"
   }
 }

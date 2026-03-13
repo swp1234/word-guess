@@ -72,5 +72,12 @@
     "rule4": "Verde: posición correcta",
     "rule5": "Amarillo: letra correcta, posición incorrecta",
     "rule6": "Gris: letra no en la palabra"
+  },
+  "related": {
+    "title": "Más por explorar",
+    "wordScramble": "Palabras revueltas",
+    "quizApp": "Quiz",
+    "devQuiz": "Quiz de desarrollo",
+    "typingSpeed": "Velocidad de escritura"
   }
 }

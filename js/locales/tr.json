@@ -72,5 +72,12 @@
     "rule4": "Yeşil: doğru konum",
     "rule5": "Sarı: doğru harf, yanlış konum",
     "rule6": "Gri: harf kelimede yok"
+  },
+  "related": {
+    "title": "Daha fazla keşfet",
+    "wordScramble": "Kelime Karıştırma",
+    "quizApp": "Quiz Uygulaması",
+    "devQuiz": "Geliştirici Quizi",
+    "typingSpeed": "Yazma Hızı"
   }
 }

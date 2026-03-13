@@ -72,5 +72,12 @@
     "rule4": "Verde: posição correta",
     "rule5": "Amarelo: letra correta, posição incorreta",
     "rule6": "Cinza: letra não está na palavra"
+  },
+  "related": {
+    "title": "Mais para explorar",
+    "wordScramble": "Palavras embaralhadas",
+    "quizApp": "Quiz",
+    "devQuiz": "Quiz de dev",
+    "typingSpeed": "Velocidade de digitação"
   }
 }

@@ -72,5 +72,12 @@
     "rule4": "Vert: position correcte",
     "rule5": "Jaune: lettre correcte, mauvaise position",
     "rule6": "Gris: lettre absente du mot"
+  },
+  "related": {
+    "title": "Plus à explorer",
+    "wordScramble": "Mots mélangés",
+    "quizApp": "Quiz",
+    "devQuiz": "Quiz développeur",
+    "typingSpeed": "Vitesse de frappe"
   }
 }
