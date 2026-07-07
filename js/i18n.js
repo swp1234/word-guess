@@ -8,6 +8,7 @@ class I18n {
         this.translations = {};
         this.supportedLanguages = ['ko', 'en', 'ja', 'zh', 'es', 'pt', 'id', 'tr', 'de', 'fr', 'hi', 'ru'];
         this.currentLang = this.detectLanguage();
+        document.documentElement.lang = this.currentLang;
         this.isInitialized = false;
     }
 
@@ -15,11 +16,21 @@ class I18n {
      * Detect user language from localStorage, browser, or default to English
      */
     detectLanguage() {
+        try {
+            const params = new URLSearchParams(window.location.search);
+            const urlLang = params.get('lang');
+            if (urlLang && this.supportedLanguages.includes(urlLang)) {
+                return urlLang;
+            }
+        } catch (e) {}
+
         // Check localStorage
-        const saved = localStorage.getItem('wordguess-language');
-        if (saved && this.supportedLanguages.includes(saved)) {
-            return saved;
-        }
+        try {
+            const saved = localStorage.getItem('wordguess-language');
+            if (saved && this.supportedLanguages.includes(saved)) {
+                return saved;
+            }
+        } catch (e) {}
 
         // Check browser language
         const browserLang = navigator.language.split('-')[0].toLowerCase();
@@ -98,6 +109,7 @@ class I18n {
      * Update all UI elements with data-i18n attribute
      */
     updateUI() {
+        document.documentElement.lang = this.currentLang;
         const elements = document.querySelectorAll('[data-i18n]');
         elements.forEach(el => {
             const key = el.getAttribute('data-i18n');
@@ -117,6 +129,10 @@ class I18n {
                 el.textContent = translation;
             }
         });
+
+        document.querySelectorAll('.lang-option').forEach(btn => {
+            btn.classList.toggle('active', btn.getAttribute('data-lang') === this.currentLang);
+        });
     }
 
     /**
@@ -133,7 +149,9 @@ class I18n {
         }
 
         this.currentLang = lang;
-        localStorage.setItem('wordguess-language', lang);
+        try {
+            localStorage.setItem('wordguess-language', lang);
+        } catch (e) {}
         this.updateUI();
         document.documentElement.lang = lang;
 
@@ -181,6 +199,7 @@ class I18n {
 
 // Create global i18n instance
 const i18n = new I18n();
+window.i18n = i18n;
 
 // Initialize i18n when DOM is ready
 if (document.readyState === 'loading') {
