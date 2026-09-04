@@ -29,6 +29,20 @@ let gameState = {
         totalAttempts: 0
     }
 };
+window.gameState = gameState;
+
+const wordGuessStages = new Set();
+
+function trackWordGuessStage(name) {
+    if (wordGuessStages.has(name)) return;
+    wordGuessStages.add(name);
+    if (typeof gtag === 'function') {
+        gtag('event', name);
+    } else {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push(['event', name, {}]);
+    }
+}
 
 // Visual feedback helpers
 function shakeBoard() {
@@ -299,6 +313,8 @@ async function handleEnter() {
     // Move current guess to completed guesses and reset
     gameState.guesses.push([...currentGuess]);
     gameState.currentGuess = [];
+    if (gameState.guesses.length === 1) trackWordGuessStage('word_guess_start');
+    if (gameState.guesses.length === 2) trackWordGuessStage('word_guess_progress');
 
     // Submit guess and save daily state
     submitGuess(gameState.guesses[gameState.guesses.length - 1]);
@@ -351,12 +367,6 @@ function submitGuess(currentGuess) {
         gameState.stats.totalScore = (gameState.stats.totalScore || 0) + gameState.roundScore;
         updateStats(true);
         if (typeof Haptic !== 'undefined') Haptic.success();
-        if (typeof DailyStreak !== 'undefined') DailyStreak.report(gameState.stats.wins);
-        if (typeof GameAchievements !== 'undefined') GameAchievements.report({
-            totalWins: gameState.stats.wins,
-            totalGames: gameState.stats.played,
-            bestStreak: gameState.stats.maxStreak || 0
-        });
         setTimeout(() => {
             playSound('correct');
             spawnConfetti();
@@ -371,36 +381,24 @@ function submitGuess(currentGuess) {
                 setTimeout(() => perfectEl.remove(), 2200);
             }
             showFloatingStreak(gameState.stats.streak);
-            if (typeof GameAds !== 'undefined') {
-                GameAds.showInterstitial({ onComplete: () => { showResultModal(true); } });
-            } else {
-                showResultModal(true);
-            }
+            showResultModal(true);
         }, 600);
     } else if (gameState.guesses.length >= gameState.attempts) {
         gameState.gameOver = true;
         gameState.won = false;
         updateStats(false);
         if (typeof Haptic !== 'undefined') Haptic.heavy();
-        if (typeof GameAchievements !== 'undefined') GameAchievements.report({
-            totalWins: gameState.stats.wins,
-            totalGames: gameState.stats.played,
-            bestStreak: gameState.stats.maxStreak || 0
-        });
         setTimeout(() => {
             playSound('error');
             shakeBoard();
-            if (typeof GameAds !== 'undefined') {
-                GameAds.showInterstitial({ onComplete: () => { showResultModal(false); } });
-            } else {
-                showResultModal(false);
-            }
+            showResultModal(false);
         }, 600);
     } else {
         // Wrong guess but still has attempts — shake feedback
         setTimeout(() => shakeBoard(), 500);
     }
 
+    if (gameState.gameOver) trackWordGuessStage('word_guess_complete');
     updateKeyboardColors();
 }
 
@@ -703,17 +701,6 @@ function showResultModal(won) {
 
     resultModal.classList.remove('hidden');
 
-    // Inject rewarded ad button for bonus hint
-    if (typeof GameAds !== 'undefined') {
-        GameAds.injectRewardButton({
-            container: '#result-modal .modal-content',
-            label: '📺 Watch Ad for +3 Hints',
-            onReward: () => {
-                gameState.hints += 3;
-                hintBtn.disabled = false;
-            }
-        });
-    }
 }
 
 /**
@@ -792,7 +779,6 @@ function startNewGame(mode = 'daily') {
     hintText.classList.add('hidden');
     hintBtn.disabled = gameState.hints <= 0;
     resultModal.classList.add('hidden');
-    if (typeof GameAds !== 'undefined') GameAds.removeRewardButton('#result-modal .modal-content');
     errorMessage.classList.add('hidden');
 
     initializeTiles();
@@ -880,22 +866,19 @@ function showStatsModal() {
 /**
  * Share game result
  */
-function shareResult() {
+async function shareResult() {
     const emojiGrid = generateEmojiGrid();
     const diffLabel = (DIFFICULTY_TIERS[gameState.difficulty] || DIFFICULTY_TIERS.normal).label;
     const text = `Word Guess #${getDayNumber()} [${diffLabel}]\n${gameState.guesses.length}/${gameState.attempts}\n\n${emojiGrid}`;
 
-    if (navigator.share) {
-        navigator.share({
-            title: 'Word Guess',
-            text: text
-        }).catch(err => console.log('Share failed:', err));
-    } else {
-        // Fallback: copy to clipboard
-        navigator.clipboard.writeText(text).then(() => {
+    try {
+        if (navigator.share) await navigator.share({ title: 'Word Guess', text });
+        else {
+            await navigator.clipboard.writeText(text);
             showError(i18n.t('result.copiedToClipboard'));
-        });
-    }
+        }
+        trackWordGuessStage('word_guess_share');
+    } catch (_) {}
 }
 
 /**
@@ -1078,6 +1061,10 @@ function setupEventListeners() {
 
     document.getElementById('share-result-btn').addEventListener('click', shareResult);
 
+    document.querySelector('.related-grid')?.addEventListener('click', (event) => {
+        if (event.target.closest('.related-card')) trackWordGuessStage('word_guess_related_click');
+    });
+
     // Close modals on outside click
     [resultModal, settingsModal, statsModal, aboutModal].forEach(modal => {
         modal.addEventListener('click', (e) => {
@@ -1142,27 +1129,12 @@ function init() {
     setupEventListeners();
     setupKeyboardShortcuts();
 
-    // Initialize daily streak
-    if (typeof DailyStreak !== 'undefined') DailyStreak.init({ gameId: 'word-guess', bestScoreKey: 'wordguess_totalWins', minTarget: 1, unit: 'wins' });
-
-    // Initialize game ads
-    if (typeof GameAds !== 'undefined') GameAds.init();
-
-    // Initialize game achievements
-    if (typeof GameAchievements !== 'undefined') GameAchievements.init({
-        gameId: 'word-guess',
-        defs: [
-            { id: 'wins_5', stat: 'totalWins', target: 5, icon: '⭐', name: 'Word Guesser' },
-            { id: 'wins_20', stat: 'totalWins', target: 20, icon: '🏆', name: 'Word Master' },
-            { id: 'wins_50', stat: 'totalWins', target: 50, icon: '👑', name: 'Word Legend' },
-            { id: 'games_10', stat: 'totalGames', target: 10, icon: '🎮', name: 'Regular Player' },
-            { id: 'streak_3', stat: 'bestStreak', target: 3, icon: '🔥', name: 'Hot Streak' },
-            { id: 'streak_7', stat: 'bestStreak', target: 7, icon: '💥', name: 'Unstoppable' }
-        ]
-    });
-
-    // Start game
-    startNewGame('daily');
+    // Honor deployment-relative PWA shortcuts without treating a mode change as play.
+    const initialMode = new URLSearchParams(window.location.search).get('mode') === 'practice' ? 'practice' : 'daily';
+    dailyModeBtn.classList.toggle('active', initialMode === 'daily');
+    practiceModeBtn.classList.toggle('active', initialMode === 'practice');
+    startNewGame(initialMode);
+    trackWordGuessStage('word_guess_view');
 
     // Update UI text when language changes
     window.addEventListener('languagechange', updateUIText);

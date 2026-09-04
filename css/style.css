@@ -584,6 +584,7 @@ body.light-mode .navbar {
 .mode-btn {
     flex: 1;
     padding: 0.75rem;
+    min-height: 44px;
     background: transparent;
     border: none;
     color: var(--color-text-secondary);
@@ -619,7 +620,7 @@ body.light-mode .navbar {
     transition: all var(--transition-fast);
     background: var(--color-bg-secondary);
     color: var(--color-text-secondary);
-    min-height: 36px;
+    min-height: 44px;
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
@@ -970,24 +971,6 @@ body.light-mode .navbar {
 }
 
 /* ============================================================================
-   AD CONTAINERS
-   ============================================================================ */
-
-.ad-container {
-    max-width: 800px;
-    margin: 1rem auto;
-    padding: 0 1rem;
-}
-
-.ad-top {
-    margin-top: 1rem;
-}
-
-.ad-bottom {
-    margin-bottom: 2rem;
-}
-
-/* ============================================================================
    RESPONSIVE DESIGN
    ============================================================================ */
 
@@ -1096,8 +1079,7 @@ input:focus-visible {
 @media print {
     .navbar,
     .modal,
-    .keyboard-container,
-    .ad-container {
+    .keyboard-container {
         display: none;
     }
 }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0f0f23">
     <meta name="description" data-i18n="meta.description" content="Daily word puzzle game in 6 attempts. Guess the 5-letter word and improve your vocabulary.">
-    <meta name="dateModified" content="2026-07-07">
+    <meta name="dateModified" content="2026-09-05">
     <meta property="og:title" content="Word Guess - Free Daily 5-Letter Word Puzzle | DopaBrain">
     <meta property="og:description" data-i18n="meta.description" content="Daily word puzzle game in 6 attempts. Guess the 5-letter word and improve your vocabulary.">
     <meta property="og:image" content="https://dopabrain.com/portal/img/og/word-guess.png">
@@ -46,58 +46,9 @@
         "applicationCategory": "Game",
         "inLanguage": ["ko","en","zh","hi","ru","ja","es","pt","id","tr","de","fr"],
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock" },
-        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.5", "ratingCount": "2500", "bestRating": "5", "worstRating": "1" },
         "author": { "@type": "Organization", "name": "DopaBrain", "url": "https://dopabrain.com" },
         "publisher": { "@type": "Organization", "name": "DopaBrain", "url": "https://dopabrain.com" },
-        "featureList": "Daily word puzzles, color-coded hints, keyboard input, score sharing, achievements, 12 languages"
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {
-                "@type": "Question",
-                "name": "Is Word Guess free to play online?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes, Word Guess is completely free to play online. No downloads or sign-ups needed — just open the page in your browser and start guessing words."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "How do I play Word Guess?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Guess the hidden 5-letter word in 6 attempts. After each guess, tiles change color: green means correct letter in the right position, yellow means correct letter but wrong position, and gray means the letter is not in the word."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "What is the difference between Daily and Practice mode?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Daily mode gives everyone the same word each day, and you get one attempt per day. Practice mode lets you play unlimited rounds with random words to sharpen your skills."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "What difficulty levels does Word Guess offer?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Word Guess offers four difficulty levels: Easy, Normal, Hard, and Expert. Higher difficulties use less common words and Hard Mode requires you to use revealed hints in subsequent guesses."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Can I share my Word Guess results?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Yes! After completing a puzzle, you can share your results as a colored grid pattern on social media or copy the link. Your guess pattern is shared without revealing the answer."
-                }
-            }
-        ]
+        "featureList": "Daily word puzzles, color-coded hints, keyboard input, score sharing, 12 languages"
     }
     </script>
     <script type="application/ld+json">
@@ -112,9 +63,6 @@
     }
     </script>
 
-    <meta name="google-adsense-account" content="ca-pub-3600813755953882">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3600813755953882" crossorigin="anonymous"></script>
-
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="icon-192.svg">
     <link rel="apple-touch-icon" href="icon-192.svg">
@@ -126,7 +74,7 @@
 
     <title data-i18n="app.title">Word Guess - Free Daily 5-Letter Word Puzzle | DopaBrain</title>
 </head>
-<body>
+<body data-ad-serving="suspended-invalid-traffic-2026-09-03">
     <div class="app-loader" id="app-loader">
         <div class="loader-spinner"></div>
     </div>
@@ -343,15 +291,6 @@
         <div id="error-message" class="error-message hidden"></div>
     </main>
 
-    <!-- AdSense Ads -->
-    <div class="ad-container ad-top">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3600813755953882" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    </div>
-
-    <div class="ad-container ad-bottom">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-3600813755953882" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
-    </div>
-
     <!-- Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
@@ -359,55 +298,19 @@
         }
     </script>
 
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-J8GSWM40TV"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-J8GSWM40TV');
-        setTimeout(function(){gtag('event','page_engage',{event_category:'word_guess',engagement_time_msec:5000})},5000);
-    </script>
-
-    <!-- AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3600813755953882"
-        crossorigin="anonymous"></script>
-
     <!-- App Scripts -->
     <script src="js/i18n.js"></script>
     <script src="js/word-list.js"></script>
     <script src="/portal/js/haptic.js"></script>
-    <script src="/portal/js/daily-streak.js"></script>
-    <script src="/portal/js/game-ads.js"></script>
-    <script src="/portal/js/achievements.js"></script>
     <script src="js/app.js"></script>
-    <div id="share-float" style="position:fixed;bottom:80px;right:16px;z-index:99">
-      <button onclick="shareApp()" style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:20px;cursor:pointer;backdrop-filter:blur(8px)" aria-label="Share">📤</button>
-    </div>
-    <script>
-      function shareApp() {
-        const url = window.location.href;
-        if (navigator.share) {
-          navigator.share({ title: document.title, url }).catch(() => {});
-        } else {
-          navigator.clipboard.writeText(url).then(() => {
-            alert('링크가 복사되었습니다!');
-          }).catch(() => { prompt('Copy:', url); });
-        }
-      }
-      function shareTwitter() {
-        window.open('https://twitter.com/intent/tweet?url=' + encodeURIComponent(window.location.href) + '&text=' + encodeURIComponent(document.title + ' - DopaBrain'), '_blank');
-      }
-    </script>
-    <div style="max-width:420px;margin:20px auto;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);">
+    <div class="related-tests" style="max-width:420px;margin:20px auto;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);">
       <h3 data-i18n="related.title" style="font-size:16px;color:#a0a0b8;margin-bottom:12px;text-align:center;">More to Explore</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <a href="/word-scramble/" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;text-decoration:none;color:#fff;"><span style="font-size:28px;">🔤</span><span data-i18n="related.wordScramble" style="font-size:12px;font-weight:600;color:#a0a0b8;">Word Scramble</span></a>
-        <a href="/quiz-app/" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;text-decoration:none;color:#fff;"><span style="font-size:28px;">📝</span><span data-i18n="related.quizApp" style="font-size:12px;font-weight:600;color:#a0a0b8;">Quiz App</span></a>
-        <a href="/dev-quiz/" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;text-decoration:none;color:#fff;"><span style="font-size:28px;">💻</span><span data-i18n="related.devQuiz" style="font-size:12px;font-weight:600;color:#a0a0b8;">Dev Quiz</span></a>
-        <a href="/typing-speed/" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;text-decoration:none;color:#fff;"><span style="font-size:28px;">⌨️</span><span data-i18n="related.typingSpeed" style="font-size:12px;font-weight:600;color:#a0a0b8;">Typing Speed</span></a>
+      <div class="related-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <a href="/word-scramble/" class="related-card" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;text-decoration:none;color:#fff;"><span style="font-size:28px;">🔤</span><span data-i18n="related.wordScramble" style="font-size:12px;font-weight:600;color:#a0a0b8;">Word Scramble</span></a>
+        <a href="/quiz-app/" class="related-card" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;text-decoration:none;color:#fff;"><span style="font-size:28px;">📝</span><span data-i18n="related.quizApp" style="font-size:12px;font-weight:600;color:#a0a0b8;">Quiz App</span></a>
+        <a href="/dev-quiz/" class="related-card" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;text-decoration:none;color:#fff;"><span style="font-size:28px;">💻</span><span data-i18n="related.devQuiz" style="font-size:12px;font-weight:600;color:#a0a0b8;">Dev Quiz</span></a>
+        <a href="/typing-speed/" class="related-card" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;text-decoration:none;color:#fff;"><span style="font-size:28px;">⌨️</span><span data-i18n="related.typingSpeed" style="font-size:12px;font-weight:600;color:#a0a0b8;">Typing Speed</span></a>
       </div>
     </div>
-    <script src="/portal/js/cross-promo.js" defer></script>
 </body>
 </html>
